@@ -103,5 +103,7 @@ func nextPermutation(nums []int) bool {
 // ////////////////////////////////////////////
 
 func main() {
-	println(utils.ToString("hello world"))
+	println(utils.ToString(
+		"",
+	))
 }

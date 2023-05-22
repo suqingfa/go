@@ -1,7 +1,6 @@
-package main
+package leetcode
 
 import (
-	"github.com/emirpasic/gods/utils"
 	"sort"
 )
 
@@ -98,12 +97,4 @@ func nextPermutation(nums []int) bool {
 
 	sort.Ints(nums)
 	return false
-}
-
-// ////////////////////////////////////////////
-
-func main() {
-	println(utils.ToString(
-		"",
-	))
 }

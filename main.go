@@ -84,6 +84,24 @@ func primes(n int) []int {
 	return res
 }
 
+// c(n, k) 组合数
+func initCK(n int) [][]int {
+	c := make([][]int, n+1)
+	for i := 0; i <= n; i++ {
+		c[i] = make([]int, n+1)
+	}
+
+	c[0][0] = 1
+	for i := 1; i <= n; i++ {
+		c[i][0] = 1
+		for j := 1; j <= i; j++ {
+			c[i][j] = c[i-1][j] + c[i-1][j-1]
+		}
+	}
+
+	return c
+}
+
 func nextPermutation(nums []int) bool {
 	n := len(nums)
 

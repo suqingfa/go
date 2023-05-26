@@ -59,18 +59,25 @@ func isPrime(n int) bool {
 	return true
 }
 
-func primes(n int) []bool {
-	res := make([]bool, n+1)
+func primes(n int) []int {
+	m := make([]bool, n+1)
 
 	for i := 2; i <= n; i++ {
-		res[i] = true
+		m[i] = true
 	}
 
 	for i := 2; i*i <= n; i++ {
-		if res[i] {
+		if m[i] {
 			for j := 2 * i; j <= n; j += i {
-				res[j] = false
+				m[j] = false
 			}
+		}
+	}
+
+	res := make([]int, 0)
+	for i := 0; i <= n; i++ {
+		if m[i] {
+			res = append(res, i)
 		}
 	}
 

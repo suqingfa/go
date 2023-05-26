@@ -59,7 +59,7 @@ func isPrime(n int) bool {
 	return true
 }
 
-func primes(n int) []int {
+func initPrimes(n int) []int {
 	m := make([]bool, n+1)
 
 	for i := 2; i <= n; i++ {
@@ -85,7 +85,7 @@ func primes(n int) []int {
 }
 
 // c(n, k) 组合数
-func initCK(n int) [][]int {
+func initCNK(n int) [][]int {
 	c := make([][]int, n+1)
 	for i := 0; i <= n; i++ {
 		c[i] = make([]int, n+1)

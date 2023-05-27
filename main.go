@@ -102,6 +102,13 @@ func initCNK(n int) [][]int {
 	return c
 }
 
+func reverse(arr []int) {
+	n := len(arr)
+	for i := 0; i < n/2; i++ {
+		arr[i], arr[n-1-i] = arr[n-1-i], arr[i]
+	}
+}
+
 func nextPermutation(nums []int) bool {
 	n := len(nums)
 

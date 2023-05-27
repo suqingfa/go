@@ -3,6 +3,7 @@ package leetcode
 import (
 	"github.com/emirpasic/gods/utils"
 	"reflect"
+	"sync"
 	"testing"
 	"time"
 )
@@ -41,6 +42,29 @@ func TestGoroutine(t *testing.T) {
 
 	println("sum: ", sum)
 	close(c)
+}
+
+func TestLock(t *testing.T) {
+	mutex := sync.Mutex{}
+	value := 0
+
+	const N = 100_000
+	c := make(chan int)
+
+	for i := 0; i < N; i++ {
+		go func(c chan int) {
+			mutex.Lock()
+			defer mutex.Unlock()
+			value++
+			c <- 0
+		}(c)
+	}
+
+	for i := 0; i < N; i++ {
+		<-c
+	}
+
+	println("value: ", value)
 }
 
 func BenchmarkToString(b *testing.B) {

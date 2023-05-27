@@ -4,6 +4,7 @@ import (
 	"github.com/emirpasic/gods/utils"
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestToString(t *testing.T) {
@@ -17,6 +18,29 @@ func TestSliceEqual(t *testing.T) {
 
 	println(reflect.DeepEqual(a, b))
 	println(reflect.DeepEqual(a, c))
+}
+
+func TestGoroutine(t *testing.T) {
+	f := func(i int, c chan int) {
+		time.Sleep(200_000_000)
+		c <- i
+	}
+
+	const N = 1000
+
+	c := make(chan int, 10)
+
+	for i := 0; i < N; i++ {
+		go f(i, c)
+	}
+
+	sum := 0
+	for i := 0; i < N; i++ {
+		sum += <-c
+	}
+
+	println("sum: ", sum)
+	close(c)
 }
 
 func BenchmarkToString(b *testing.B) {

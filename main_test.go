@@ -1,6 +1,8 @@
 package leetcode
 
 import (
+	"github.com/emirpasic/gods/queues/linkedlistqueue"
+	"github.com/emirpasic/gods/queues/priorityqueue"
 	"github.com/emirpasic/gods/utils"
 	"reflect"
 	"sync"
@@ -19,6 +21,43 @@ func TestSliceEqual(t *testing.T) {
 
 	println(reflect.DeepEqual(a, b))
 	println(reflect.DeepEqual(a, c))
+}
+
+func TestQueue(t *testing.T) {
+	q := linkedlistqueue.New()
+	q.Enqueue(0)
+	q.Enqueue(1)
+	q.Enqueue(2)
+	q.Enqueue(3)
+	if q.Empty() {
+		t.Error()
+	}
+
+	for i := 0; i < 4; i++ {
+		value, ok := q.Dequeue()
+		if !ok {
+			t.Error()
+		}
+		if value.(int) != i {
+			t.Error()
+		}
+	}
+
+	pq := priorityqueue.NewWith(utils.IntComparator)
+	pq.Enqueue(3)
+	pq.Enqueue(2)
+	pq.Enqueue(1)
+	pq.Enqueue(0)
+
+	for i := 0; i < 4; i++ {
+		value, ok := pq.Dequeue()
+		if !ok {
+			t.Error()
+		}
+		if value.(int) != i {
+			t.Error()
+		}
+	}
 }
 
 func TestGoroutine(t *testing.T) {

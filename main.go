@@ -49,6 +49,34 @@ func (this *UnionFind) union(i int, j int) bool {
 	return true
 }
 
+type UnionFindString struct {
+	father map[string]string
+}
+
+func NewUnionFindString() *UnionFindString {
+	father := make(map[string]string)
+	return &UnionFindString{father}
+}
+
+func (this *UnionFindString) find(i string) string {
+	p, ok := this.father[i]
+	if !ok || p == i {
+		return i
+	}
+	return this.find(p)
+}
+
+func (this *UnionFindString) union(i string, j string) bool {
+	pi := this.find(i)
+	pj := this.find(j)
+	if pi == pj {
+		return false
+	}
+
+	this.father[pi] = pj
+	return true
+}
+
 // // ////////////////////////////////////////////////
 
 func gcd(a, b int) int {

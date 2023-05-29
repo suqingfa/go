@@ -16,6 +16,40 @@ type TreeNode struct {
 }
 
 // ////////////////////////////////////////////////
+// 数据结构
+
+// UnionFind 并查集
+type UnionFind struct {
+	father map[int]int
+}
+
+func NewUnionFind(n int) *UnionFind {
+	father := make(map[int]int)
+	for i := 0; i < n; i++ {
+		father[i] = i
+	}
+	return &UnionFind{father}
+}
+
+func (this *UnionFind) find(i int) int {
+	p := this.father[i]
+	for ; p != this.father[p]; p = this.father[p] {
+	}
+	return p
+}
+
+func (this *UnionFind) union(i int, j int) bool {
+	pi := this.find(i)
+	pj := this.find(j)
+	if pi == pj {
+		return false
+	}
+
+	this.father[pi] = pj
+	return true
+}
+
+// // ////////////////////////////////////////////////
 
 func gcd(a, b int) int {
 	if b == 0 {

@@ -21,18 +21,29 @@ type TreeNode struct {
 // UnionFind 并查集
 type UnionFind[T comparable] struct {
 	father map[T]T
+	count  map[T]int
 }
 
 func NewUnionFind[T comparable]() *UnionFind[T] {
-	father := make(map[T]T)
-	return &UnionFind[T]{father}
+	return &UnionFind[T]{make(map[T]T), make(map[T]int)}
+}
+
+func (this *UnionFind[T]) size(t T) int {
+	return this.count[this.find(t)] + 1
 }
 
 func (this *UnionFind[T]) find(t T) T {
 	if _, ok := this.father[t]; !ok {
 		return t
 	}
+	old := this.father[t]
 	this.father[t] = this.find(this.father[t])
+
+	if old != this.father[t] {
+		this.count[this.father[t]]++
+		delete(this.count, old)
+	}
+
 	return this.father[t]
 }
 
@@ -47,7 +58,13 @@ func (this *UnionFind[T]) union(a T, b T) bool {
 		return false
 	}
 
-	this.father[pa] = pb
+	this.father[pb] = pa
+
+	this.count[pa]++
+	delete(this.count, pb)
+	this.find(a)
+	this.find(b)
+
 	return true
 }
 

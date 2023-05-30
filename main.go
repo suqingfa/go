@@ -19,61 +19,35 @@ type TreeNode struct {
 // 数据结构
 
 // UnionFind 并查集
-type UnionFind struct {
-	father map[int]int
+type UnionFind[T comparable] struct {
+	father map[T]T
 }
 
-func NewUnionFind(n int) *UnionFind {
-	father := make(map[int]int)
-	for i := 0; i < n; i++ {
-		father[i] = i
+func NewUnionFind[T comparable]() *UnionFind[T] {
+	father := make(map[T]T)
+	return &UnionFind[T]{father}
+}
+
+func (this *UnionFind[T]) find(t T) T {
+	if _, ok := this.father[t]; !ok {
+		return t
 	}
-	return &UnionFind{father}
+	this.father[t] = this.find(this.father[t])
+	return this.father[t]
 }
 
-func (this *UnionFind) find(i int) int {
-	p := this.father[i]
-	for ; p != this.father[p]; p = this.father[p] {
-	}
-	return p
+func (this *UnionFind[T]) isConnected(a T, b T) bool {
+	return this.find(a) == this.find(b)
 }
 
-func (this *UnionFind) union(i int, j int) bool {
-	pi := this.find(i)
-	pj := this.find(j)
-	if pi == pj {
+func (this *UnionFind[T]) union(a T, b T) bool {
+	pa := this.find(a)
+	pb := this.find(b)
+	if pa == pb {
 		return false
 	}
 
-	this.father[pi] = pj
-	return true
-}
-
-type UnionFindString struct {
-	father map[string]string
-}
-
-func NewUnionFindString() *UnionFindString {
-	father := make(map[string]string)
-	return &UnionFindString{father}
-}
-
-func (this *UnionFindString) find(i string) string {
-	p, ok := this.father[i]
-	if !ok || p == i {
-		return i
-	}
-	return this.find(p)
-}
-
-func (this *UnionFindString) union(i string, j string) bool {
-	pi := this.find(i)
-	pj := this.find(j)
-	if pi == pj {
-		return false
-	}
-
-	this.father[pi] = pj
+	this.father[pa] = pb
 	return true
 }
 
@@ -164,7 +138,7 @@ func initCNK(n int) [][]int {
 	return c
 }
 
-func reverse(arr []int) {
+func reverse[T any](arr []T) {
 	n := len(arr)
 	for i := 0; i < n/2; i++ {
 		arr[i], arr[n-1-i] = arr[n-1-i], arr[i]

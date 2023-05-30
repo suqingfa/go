@@ -51,6 +51,51 @@ func (this *UnionFind[T]) union(a T, b T) bool {
 	return true
 }
 
+// MonotonicStack 单调栈
+type MonotonicStack[T sort.Interface] struct {
+	source   T
+	stack    []int
+	topIndex int
+}
+
+func NewMonotonicStack[T sort.Interface](source T) *MonotonicStack[T] {
+	return &MonotonicStack[T]{source, make([]int, source.Len()), 0}
+}
+
+func (this *MonotonicStack[T]) size() int {
+	return this.topIndex
+}
+
+func (this *MonotonicStack[T]) isEmpty() bool {
+	return this.size() == 0
+}
+
+func (this *MonotonicStack[T]) top() int {
+	return this.stack[this.topIndex-1]
+}
+
+func (this *MonotonicStack[T]) pop() int {
+	res := this.top()
+	this.topIndex--
+	return res
+}
+
+func (this *MonotonicStack[T]) push(index int) []int {
+	res := make([]int, 0)
+	for this.size() > 0 && this.source.Less(this.top(), index) {
+		res = append(res, this.pop())
+	}
+
+	if this.topIndex == len(this.stack) {
+		this.stack = append(this.stack, index)
+	} else {
+		this.stack[this.topIndex] = index
+	}
+	this.topIndex++
+
+	return res
+}
+
 // // ////////////////////////////////////////////////
 
 func gcd(a, b int) int {

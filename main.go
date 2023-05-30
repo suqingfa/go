@@ -96,6 +96,40 @@ func (this *MonotonicStack[T]) push(index int) []int {
 	return res
 }
 
+// MonotonicQueue 单调队列
+type MonotonicQueue struct {
+	queue []int
+}
+
+func NewMonotonicQueue() *MonotonicQueue {
+	return &MonotonicQueue{nil}
+}
+
+func (this *MonotonicQueue) size() int {
+	return len(this.queue)
+}
+
+func (this *MonotonicQueue) isEmpty() bool {
+	return this.size() == 0
+}
+
+func (this *MonotonicQueue) peek() int {
+	return this.queue[0]
+}
+
+func (this *MonotonicQueue) dequeue(head int) {
+	if !this.isEmpty() && this.queue[0] == head {
+		this.queue = this.queue[1:]
+	}
+}
+
+func (this *MonotonicQueue) enqueue(tail int) {
+	for !this.isEmpty() && tail > this.queue[this.size()-1] {
+		this.queue = this.queue[:this.size()-1]
+	}
+	this.queue = append(this.queue, tail)
+}
+
 // // ////////////////////////////////////////////////
 
 func gcd(a, b int) int {

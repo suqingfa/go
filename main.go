@@ -20,7 +20,7 @@ type TreeNode struct {
 
 // UnionFind 并查集
 type UnionFind[T comparable] struct {
-	father map[T]T
+	leader map[T]T
 }
 
 func NewUnionFind[T comparable]() *UnionFind[T] {
@@ -28,12 +28,12 @@ func NewUnionFind[T comparable]() *UnionFind[T] {
 }
 
 func (this *UnionFind[T]) find(t T) T {
-	if _, ok := this.father[t]; !ok {
+	if _, ok := this.leader[t]; !ok {
 		return t
 	}
-	this.father[t] = this.find(this.father[t])
+	this.leader[t] = this.find(this.leader[t])
 
-	return this.father[t]
+	return this.leader[t]
 }
 
 func (this *UnionFind[T]) isConnected(a T, b T) bool {
@@ -41,13 +41,13 @@ func (this *UnionFind[T]) isConnected(a T, b T) bool {
 }
 
 func (this *UnionFind[T]) union(a T, b T) bool {
-	pa := this.find(a)
-	pb := this.find(b)
-	if pa == pb {
+	la := this.find(a)
+	lb := this.find(b)
+	if la == lb {
 		return false
 	}
 
-	this.father[pb] = pa
+	this.leader[lb] = la
 
 	return true
 }

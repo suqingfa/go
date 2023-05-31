@@ -131,6 +131,69 @@ func (this *MonotonicQueue) enqueue(tail int) {
 	this.queue = append(this.queue, tail)
 }
 
+// Trie 字典树
+type Trie struct {
+	child map[byte]*Trie
+	root  bool
+	end   bool
+}
+
+func NewTrie() *Trie {
+	return &Trie{root: true, child: map[byte]*Trie{}}
+}
+
+func (this *Trie) findChild(c byte, create bool) *Trie {
+	if _, ok := this.child[c]; !ok && create {
+		this.child[c] = &Trie{root: false, child: map[byte]*Trie{}}
+	}
+
+	return this.child[c]
+}
+
+func (this *Trie) Insert(word string) {
+	if this.root {
+		child := this.findChild(word[0], true)
+		child.Insert(word)
+		return
+	}
+
+	if len(word) == 1 {
+		this.end = true
+		return
+	}
+
+	child := this.findChild(word[1], true)
+	child.Insert(word[1:])
+}
+
+func (this *Trie) find(word string, findWithPrefix bool) bool {
+	if this.root {
+		child := this.findChild(word[0], false)
+		if child == nil {
+			return false
+		}
+		return child.find(word, findWithPrefix)
+	}
+
+	if len(word) == 1 {
+		return findWithPrefix || this.end
+	}
+
+	child := this.findChild(word[1], false)
+	if child == nil {
+		return false
+	}
+	return child.find(word[1:], findWithPrefix)
+}
+
+func (this *Trie) Search(word string) bool {
+	return this.find(word, false)
+}
+
+func (this *Trie) StartsWith(prefix string) bool {
+	return this.find(prefix, true)
+}
+
 // // ////////////////////////////////////////////////
 
 func gcd(a, b int) int {

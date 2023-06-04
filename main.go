@@ -71,8 +71,12 @@ func (this *MonotonicStack[T]) isEmpty() bool {
 	return this.size() == 0
 }
 
+func (this *MonotonicStack[T]) topN(n int) int {
+	return this.stack[this.topIndex-n-1]
+}
+
 func (this *MonotonicStack[T]) top() int {
-	return this.stack[this.topIndex-1]
+	return this.topN(0)
 }
 
 func (this *MonotonicStack[T]) pop() int {
@@ -223,6 +227,67 @@ func (this *Trie) Prefix(word string) (string, bool) {
 	}
 
 	return word[:1] + prefix, true
+}
+
+// SegmentTree 线段树
+type SegmentTree struct {
+	value int
+
+	start int
+	end   int
+
+	// [start, mid]
+	left *SegmentTree
+	// [mid+1, end]
+	right *SegmentTree
+}
+
+func NewSegmentTree(start int, end int) *SegmentTree {
+	return &SegmentTree{start: start, end: end}
+}
+func (this *SegmentTree) mid() int {
+	return (this.start + this.end) / 2
+}
+
+func (this *SegmentTree) getLeft() *SegmentTree {
+	if this.left == nil {
+		this.left = &SegmentTree{start: this.start, end: this.mid()}
+	}
+	return this.left
+}
+
+func (this *SegmentTree) getRight() *SegmentTree {
+	if this.right == nil {
+		this.right = &SegmentTree{start: this.mid() + 1, end: this.end}
+	}
+	return this.right
+}
+
+func (this *SegmentTree) Insert(node int) {
+	this.value++
+	if node == this.start && node == this.end {
+		return
+	}
+
+	if node <= this.mid() {
+		this.getLeft().Insert(node)
+	} else {
+		this.getRight().Insert(node)
+	}
+}
+
+func (this *SegmentTree) Search(start int, end int) int {
+	if start == this.start && end == this.end {
+		return this.value
+	}
+
+	if end <= this.mid() {
+		return this.getLeft().Search(start, end)
+	} else if this.mid() < start {
+		return this.getRight().Search(start, end)
+	} else {
+		return this.getLeft().Search(start, this.mid()) + this.getRight().Search(this.mid()+1, end)
+	}
 }
 
 // // ////////////////////////////////////////////////

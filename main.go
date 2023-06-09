@@ -300,20 +300,26 @@ func gcd(a, b int) int {
 	return gcd(b, a%b)
 }
 
-func min(a, b int) int {
-	if a > b {
-		return b
+func min(arr ...int) int {
+	res := arr[0]
+	for _, i := range arr {
+		if res > i {
+			res = i
+		}
 	}
 
-	return a
+	return res
 }
 
-func max(a, b int) int {
-	if a < b {
-		return b
+func max(arr ...int) int {
+	res := arr[0]
+	for _, i := range arr {
+		if res < i {
+			res = i
+		}
 	}
 
-	return a
+	return res
 }
 
 func abs(n int) int {

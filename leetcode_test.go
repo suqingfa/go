@@ -25,4 +25,15 @@ func TestTable(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 		})
 	}
+
+	const N = 1e4
+	nums := make([]int, N)
+	for i := 0; i < N; i++ {
+		nums[i] = 1
+	}
+
+	matrix := make([][]int, N)
+	for i := 0; i < N; i++ {
+		matrix[i] = make([]int, N)
+	}
 }

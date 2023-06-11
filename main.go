@@ -300,7 +300,7 @@ func gcd(a, b int) int {
 	return gcd(b, a%b)
 }
 
-func min(arr ...int) int {
+func min[T int | int64 | byte | rune | float64](arr ...T) T {
 	res := arr[0]
 	for _, i := range arr {
 		if res > i {
@@ -311,7 +311,7 @@ func min(arr ...int) int {
 	return res
 }
 
-func max(arr ...int) int {
+func max[T int | int64 | byte | rune | float64](arr ...T) T {
 	res := arr[0]
 	for _, i := range arr {
 		if res < i {

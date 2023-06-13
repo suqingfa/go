@@ -322,7 +322,19 @@ func max[T int | int64 | byte | rune | float64](arr ...T) T {
 	return res
 }
 
-func abs(n int) int {
+func sum[T int | int64 | byte | rune | float64](arr ...T) T {
+	if len(arr) == 0 {
+		return 0
+	}
+
+	res := arr[0]
+	for i := 1; i < len(arr); i++ {
+		res += arr[i]
+	}
+	return res
+}
+
+func abs[T int | int64 | byte | rune | float64](n T) T {
 	if n < 0 {
 		return -n
 	}

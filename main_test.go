@@ -1,6 +1,7 @@
 package leetcode
 
 import (
+	"encoding/json"
 	"github.com/emirpasic/gods/queues/linkedlistqueue"
 	"github.com/emirpasic/gods/queues/priorityqueue"
 	"github.com/emirpasic/gods/utils"
@@ -21,6 +22,19 @@ func TestSliceEqual(t *testing.T) {
 
 	println(reflect.DeepEqual(a, b))
 	println(reflect.DeepEqual(a, c))
+}
+
+func TestJson(t *testing.T) {
+	bytes, _ := json.Marshal(map[string]int{"a": 1, "b": 2})
+
+	m := make(map[string]int)
+	_ = json.Unmarshal(bytes, &m)
+
+	println(string(bytes), utils.ToString(m))
+
+	if len(m) != 2 || m["a"] != 1 || m["b"] != 2 {
+		t.Error()
+	}
 }
 
 func TestQueue(t *testing.T) {

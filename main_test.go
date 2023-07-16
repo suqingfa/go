@@ -74,6 +74,15 @@ func TestQueue(t *testing.T) {
 	}
 }
 
+func TestTimeParse(t *testing.T) {
+	parse, err := time.Parse("2006:01:02:15:04:05", "2000:01:02:03:04:05")
+	if err != nil {
+		t.Error()
+		return
+	}
+	println(utils.ToString(parse))
+}
+
 func TestGoroutine(t *testing.T) {
 	f := func(i int, c chan int) {
 		time.Sleep(200_000_000)

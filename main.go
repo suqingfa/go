@@ -95,7 +95,7 @@ func (this *MonotonicStack[T]) push(index int) []int {
 	return res
 }
 
-// MonotonicQueue 单调队列
+// MonotonicQueue 单调队列 队列中的数据单调递增 主要用来辅助解决滑动窗口相关的问题
 type MonotonicQueue struct {
 	queue []int
 }
@@ -108,25 +108,23 @@ func (this *MonotonicQueue) size() int {
 	return len(this.queue)
 }
 
-func (this *MonotonicQueue) isEmpty() bool {
-	return this.size() == 0
-}
-
 func (this *MonotonicQueue) peek() int {
 	return this.queue[0]
 }
 
-func (this *MonotonicQueue) dequeue(head int) {
-	if !this.isEmpty() && this.queue[0] == head {
+func (this *MonotonicQueue) dequeue(head int) bool {
+	res := this.size() != 0 && this.queue[0] == head
+	if res {
 		this.queue = this.queue[1:]
 	}
+	return res
 }
 
-func (this *MonotonicQueue) enqueue(tail int) {
-	for !this.isEmpty() && tail > this.queue[this.size()-1] {
+func (this *MonotonicQueue) enqueue(value int) {
+	for this.size() != 0 && value > this.queue[this.size()-1] {
 		this.queue = this.queue[:this.size()-1]
 	}
-	this.queue = append(this.queue, tail)
+	this.queue = append(this.queue, value)
 }
 
 // Trie 字典树

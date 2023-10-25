@@ -52,6 +52,44 @@ func TestMonotonicStack(t *testing.T) {
 	}
 }
 
+func TestMonotonicQueue(t *testing.T) {
+	source := []int{3, 1, 2, 3, 2, 1, 4}
+	queue := NewMonotonicQueue()
+
+	except := [][]int{
+		{3},
+		{3, 1},
+		{3, 2},
+		{3, 3},
+		{3, 3, 2},
+		{3, 3, 2, 1},
+		{4},
+	}
+
+	for i, v := range source {
+		queue.enqueue(v)
+		if !reflect.DeepEqual(queue.queue, except[i]) {
+			t.Error()
+		}
+	}
+
+	if queue.peek() != 4 {
+		t.Error()
+	}
+
+	if queue.dequeue(3) {
+		t.Error()
+	}
+
+	if !queue.dequeue(4) {
+		t.Error()
+	}
+
+	if queue.dequeue(4) {
+		t.Error()
+	}
+}
+
 func TestGcd(t *testing.T) {
 	if gcd(2, 3) != 1 {
 		t.Error()

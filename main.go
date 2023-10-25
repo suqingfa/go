@@ -67,10 +67,6 @@ func (this *MonotonicStack[T]) size() int {
 	return this.topIndex
 }
 
-func (this *MonotonicStack[T]) isEmpty() bool {
-	return this.size() == 0
-}
-
 func (this *MonotonicStack[T]) topN(n int) int {
 	return this.stack[this.topIndex-n-1]
 }
@@ -89,15 +85,11 @@ func (this *MonotonicStack[T]) pop() int {
 // 返回值
 func (this *MonotonicStack[T]) push(index int) []int {
 	res := make([]int, 0)
-	for this.size() > 0 && !this.source.Less(this.top(), index) {
+	for this.size() > 0 && this.source.Less(this.top(), index) {
 		res = append(res, this.pop())
 	}
 
-	if this.topIndex == len(this.stack) {
-		this.stack = append(this.stack, index)
-	} else {
-		this.stack[this.topIndex] = index
-	}
+	this.stack[this.topIndex] = index
 	this.topIndex++
 
 	return res

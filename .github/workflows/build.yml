@@ -27,7 +27,7 @@ jobs:
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
-          path: ~/.sonar/cache
+          path: /opt/sonar-scanner/.sonar/cache
           key: ${{ runner.os }}-sonar
 
       - name: SonarCloud Scan

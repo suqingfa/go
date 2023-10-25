@@ -1,3 +1,4 @@
+[![Test and coverage](https://github.com/suqingfa/go/actions/workflows/build.yml/badge.svg)](https://github.com/suqingfa/go/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/suqingfa/go/graph/badge.svg?token=4LWFXREZNB)](https://codecov.io/gh/suqingfa/go)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=suqingfa_go&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=suqingfa_go)
 

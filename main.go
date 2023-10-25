@@ -52,7 +52,7 @@ func (this *UnionFind[T]) union(a T, b T) bool {
 	return true
 }
 
-// MonotonicStack 单调栈
+// MonotonicStack 单调栈 从栈顶到栈底的元素是单调递增（或者单调递减）
 type MonotonicStack[T sort.Interface] struct {
 	source   T
 	stack    []int
@@ -85,9 +85,11 @@ func (this *MonotonicStack[T]) pop() int {
 	return res
 }
 
+// 将 source[index] 的索引 index 压入栈
+// 返回值
 func (this *MonotonicStack[T]) push(index int) []int {
 	res := make([]int, 0)
-	for this.size() > 0 && this.source.Less(this.top(), index) {
+	for this.size() > 0 && !this.source.Less(this.top(), index) {
 		res = append(res, this.pop())
 	}
 

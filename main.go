@@ -81,8 +81,8 @@ func (s *MonotonicStack[T]) Pop() int {
 	return res
 }
 
-// 将 source[index] 的索引 index 压入栈
-// 返回值
+// Push 将 source[index] 的索引 index 压入栈
+// 返回值 栈顶大于index的索引
 func (s *MonotonicStack[T]) Push(index int) []int {
 	res := make([]int, 0)
 	for s.Size() > 0 && s.source.Less(s.Top(), index) {

@@ -27,27 +27,27 @@ func NewUnionFind[T comparable]() *UnionFind[T] {
 	return &UnionFind[T]{make(map[T]T)}
 }
 
-func (this *UnionFind[T]) find(t T) T {
-	if _, ok := this.leader[t]; !ok {
+func (s *UnionFind[T]) Find(t T) T {
+	if _, ok := s.leader[t]; !ok {
 		return t
 	}
-	this.leader[t] = this.find(this.leader[t])
+	s.leader[t] = s.Find(s.leader[t])
 
-	return this.leader[t]
+	return s.leader[t]
 }
 
-func (this *UnionFind[T]) isConnected(a T, b T) bool {
-	return this.find(a) == this.find(b)
+func (s *UnionFind[T]) Connected(a T, b T) bool {
+	return s.Find(a) == s.Find(b)
 }
 
-func (this *UnionFind[T]) union(a T, b T) bool {
-	la := this.find(a)
-	lb := this.find(b)
+func (s *UnionFind[T]) Union(a T, b T) bool {
+	la := s.Find(a)
+	lb := s.Find(b)
 	if la == lb {
 		return false
 	}
 
-	this.leader[lb] = la
+	s.leader[lb] = la
 
 	return true
 }
@@ -63,34 +63,34 @@ func NewMonotonicStack[T sort.Interface](source T) *MonotonicStack[T] {
 	return &MonotonicStack[T]{source, make([]int, source.Len()), 0}
 }
 
-func (this *MonotonicStack[T]) size() int {
-	return this.topIndex
+func (s *MonotonicStack[T]) Size() int {
+	return s.topIndex
 }
 
-func (this *MonotonicStack[T]) topN(n int) int {
-	return this.stack[this.topIndex-n-1]
+func (s *MonotonicStack[T]) TopN(n int) int {
+	return s.stack[s.topIndex-n-1]
 }
 
-func (this *MonotonicStack[T]) top() int {
-	return this.topN(0)
+func (s *MonotonicStack[T]) Top() int {
+	return s.TopN(0)
 }
 
-func (this *MonotonicStack[T]) pop() int {
-	res := this.top()
-	this.topIndex--
+func (s *MonotonicStack[T]) Pop() int {
+	res := s.Top()
+	s.topIndex--
 	return res
 }
 
 // 将 source[index] 的索引 index 压入栈
 // 返回值
-func (this *MonotonicStack[T]) push(index int) []int {
+func (s *MonotonicStack[T]) Push(index int) []int {
 	res := make([]int, 0)
-	for this.size() > 0 && this.source.Less(this.top(), index) {
-		res = append(res, this.pop())
+	for s.Size() > 0 && s.source.Less(s.Top(), index) {
+		res = append(res, s.Pop())
 	}
 
-	this.stack[this.topIndex] = index
-	this.topIndex++
+	s.stack[s.topIndex] = index
+	s.topIndex++
 
 	return res
 }
@@ -104,27 +104,27 @@ func NewMonotonicQueue() *MonotonicQueue {
 	return &MonotonicQueue{nil}
 }
 
-func (this *MonotonicQueue) size() int {
-	return len(this.queue)
+func (s *MonotonicQueue) Size() int {
+	return len(s.queue)
 }
 
-func (this *MonotonicQueue) peek() int {
-	return this.queue[0]
+func (s *MonotonicQueue) Peek() int {
+	return s.queue[0]
 }
 
-func (this *MonotonicQueue) dequeue(head int) bool {
-	res := this.size() != 0 && this.queue[0] == head
+func (s *MonotonicQueue) Dequeue(head int) bool {
+	res := s.Size() != 0 && s.queue[0] == head
 	if res {
-		this.queue = this.queue[1:]
+		s.queue = s.queue[1:]
 	}
 	return res
 }
 
-func (this *MonotonicQueue) enqueue(value int) {
-	for this.size() != 0 && value > this.queue[this.size()-1] {
-		this.queue = this.queue[:this.size()-1]
+func (s *MonotonicQueue) Enqueue(value int) {
+	for s.Size() != 0 && value > s.queue[s.Size()-1] {
+		s.queue = s.queue[:s.Size()-1]
 	}
-	this.queue = append(this.queue, value)
+	s.queue = append(s.queue, value)
 }
 
 // Trie 字典树
@@ -139,33 +139,33 @@ func NewTrie() *Trie {
 	return &Trie{root: true, child: map[byte]*Trie{}}
 }
 
-func (this *Trie) findChild(c byte, create bool) *Trie {
-	if _, ok := this.child[c]; !ok && create {
-		this.child[c] = &Trie{root: false, child: map[byte]*Trie{}, key: string(c)}
+func (s *Trie) findChild(c byte, create bool) *Trie {
+	if _, ok := s.child[c]; !ok && create {
+		s.child[c] = &Trie{root: false, child: map[byte]*Trie{}, key: string(c)}
 	}
 
-	return this.child[c]
+	return s.child[c]
 }
 
-func (this *Trie) Insert(word string) {
-	if this.root {
-		child := this.findChild(word[0], true)
+func (s *Trie) Insert(word string) {
+	if s.root {
+		child := s.findChild(word[0], true)
 		child.Insert(word)
 		return
 	}
 
 	if len(word) == 1 {
-		this.end = true
+		s.end = true
 		return
 	}
 
-	child := this.findChild(word[1], true)
+	child := s.findChild(word[1], true)
 	child.Insert(word[1:])
 }
 
-func (this *Trie) find(word string, findWithPrefix bool) bool {
-	if this.root {
-		child := this.findChild(word[0], false)
+func (s *Trie) find(word string, findWithPrefix bool) bool {
+	if s.root {
+		child := s.findChild(word[0], false)
 		if child == nil {
 			return false
 		}
@@ -173,23 +173,23 @@ func (this *Trie) find(word string, findWithPrefix bool) bool {
 	}
 
 	if len(word) == 1 {
-		return findWithPrefix || this.end
+		return findWithPrefix || s.end
 	}
 
-	child := this.findChild(word[1], false)
+	child := s.findChild(word[1], false)
 	if child == nil {
 		return false
 	}
 	return child.find(word[1:], findWithPrefix)
 }
 
-func (this *Trie) Search(word string) bool {
-	return this.find(word, false)
+func (s *Trie) Search(word string) bool {
+	return s.find(word, false)
 }
 
 // StartsWith 字典树中是否存在以 prefix 为前缀的词
-func (this *Trie) StartsWith(prefix string) bool {
-	return this.find(prefix, true)
+func (s *Trie) StartsWith(prefix string) bool {
+	return s.find(prefix, true)
 }
 
 // SegmentTree 线段树
@@ -208,84 +208,62 @@ type SegmentTree struct {
 func NewSegmentTree(start int, end int) *SegmentTree {
 	return &SegmentTree{start: start, end: end}
 }
-func (this *SegmentTree) mid() int {
-	return (this.start + this.end) / 2
+func (s *SegmentTree) mid() int {
+	return (s.start + s.end) / 2
 }
 
-func (this *SegmentTree) getLeft() *SegmentTree {
-	if this.left == nil {
-		this.left = &SegmentTree{start: this.start, end: this.mid()}
+func (s *SegmentTree) getLeft() *SegmentTree {
+	if s.left == nil {
+		s.left = &SegmentTree{start: s.start, end: s.mid()}
 	}
-	return this.left
+	return s.left
 }
 
-func (this *SegmentTree) getRight() *SegmentTree {
-	if this.right == nil {
-		this.right = &SegmentTree{start: this.mid() + 1, end: this.end}
+func (s *SegmentTree) getRight() *SegmentTree {
+	if s.right == nil {
+		s.right = &SegmentTree{start: s.mid() + 1, end: s.end}
 	}
-	return this.right
+	return s.right
 }
 
-func (this *SegmentTree) Insert(node int) {
-	this.value++
-	if node == this.start && node == this.end {
+func (s *SegmentTree) Insert(node int) {
+	s.value++
+	if node == s.start && node == s.end {
 		return
 	}
 
-	if node <= this.mid() {
-		this.getLeft().Insert(node)
+	if node <= s.mid() {
+		s.getLeft().Insert(node)
 	} else {
-		this.getRight().Insert(node)
+		s.getRight().Insert(node)
 	}
 }
 
-func (this *SegmentTree) Search(start int, end int) int {
-	if start == this.start && end == this.end {
-		return this.value
+func (s *SegmentTree) Search(start int, end int) int {
+	if start == s.start && end == s.end {
+		return s.value
 	}
 
-	if end <= this.mid() {
-		return this.getLeft().Search(start, end)
-	} else if this.mid() < start {
-		return this.getRight().Search(start, end)
+	if end <= s.mid() {
+		return s.getLeft().Search(start, end)
+	} else if s.mid() < start {
+		return s.getRight().Search(start, end)
 	} else {
-		return this.getLeft().Search(start, this.mid()) + this.getRight().Search(this.mid()+1, end)
+		return s.getLeft().Search(start, s.mid()) + s.getRight().Search(s.mid()+1, end)
 	}
 }
 
 // // ////////////////////////////////////////////////
 
-func gcd(a, b int) int {
+func Gcd(a, b int) int {
 	if b == 0 {
 		return a
 	}
 
-	return gcd(b, a%b)
+	return Gcd(b, a%b)
 }
 
-func min[T int | int64 | byte | rune | float64](arr ...T) T {
-	res := arr[0]
-	for _, i := range arr {
-		if res > i {
-			res = i
-		}
-	}
-
-	return res
-}
-
-func max[T int | int64 | byte | rune | float64](arr ...T) T {
-	res := arr[0]
-	for _, i := range arr {
-		if res < i {
-			res = i
-		}
-	}
-
-	return res
-}
-
-func sum[T int | int64 | byte | rune | float64](arr ...T) T {
+func Sum[T int | int64 | byte | rune | float64](arr ...T) T {
 	res := T(0)
 	for i := 0; i < len(arr); i++ {
 		res += arr[i]
@@ -293,15 +271,15 @@ func sum[T int | int64 | byte | rune | float64](arr ...T) T {
 	return res
 }
 
-func abs[T int | int64 | byte | rune | float64](n T) T {
-	if n < 0 {
-		return -n
+func Abs[T int | int64 | byte | rune | float64](n T) T {
+	if n < T(0) {
+		return T(0) - n
 	}
 
 	return n
 }
 
-func isPrime(n int) bool {
+func IsPrime(n int) bool {
 	for i := 2; i*i <= n; i++ {
 		if n%i == 0 {
 			return false
@@ -354,28 +332,28 @@ func initCNK(n int) [][]int {
 	return c
 }
 
-func reverse[T any](arr []T) {
+func Reverse[T any](arr []T) {
 	n := len(arr)
 	for i := 0; i < n/2; i++ {
 		arr[i], arr[n-1-i] = arr[n-1-i], arr[i]
 	}
 }
 
-func nextPermutation(nums []int) bool {
-	n := len(nums)
+func NextPermutation(arr []int) bool {
+	n := len(arr)
 
 	i := n - 2
-	for ; i > 0 && nums[i] >= nums[i+1]; i-- {
+	for ; i > 0 && arr[i] >= arr[i+1]; i-- {
 	}
 
 	for j := n - 1; j > i; j-- {
-		if nums[j] > nums[i] {
-			nums[i], nums[j] = nums[j], nums[i]
-			sort.Ints(nums[i+1:])
+		if arr[j] > arr[i] {
+			arr[i], arr[j] = arr[j], arr[i]
+			sort.Ints(arr[i+1:])
 			return true
 		}
 	}
 
-	sort.Ints(nums)
+	sort.Ints(arr)
 	return false
 }

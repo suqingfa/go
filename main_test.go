@@ -10,23 +10,23 @@ import (
 func TestUnionFind(t *testing.T) {
 	uf := NewUnionFind[int]()
 
-	if !uf.union(1, 2) {
+	if !uf.Union(1, 2) {
 		t.Error()
 	}
 
-	if uf.union(1, 2) {
+	if uf.Union(1, 2) {
 		t.Error()
 	}
 
-	if uf.find(2) != 1 {
+	if uf.Find(2) != 1 {
 		t.Error()
 	}
 
-	if !uf.isConnected(1, 2) {
+	if !uf.Connected(1, 2) {
 		t.Error()
 	}
 
-	if uf.isConnected(1, 3) {
+	if uf.Connected(1, 3) {
 		t.Error()
 	}
 }
@@ -46,7 +46,7 @@ func TestMonotonicStack(t *testing.T) {
 	}
 
 	for i := 0; i < len(source); i++ {
-		push := stack.push(i)
+		push := stack.Push(i)
 		if !reflect.DeepEqual(push, except[i]) {
 			t.Error(push)
 		}
@@ -68,25 +68,25 @@ func TestMonotonicQueue(t *testing.T) {
 	}
 
 	for i, v := range source {
-		queue.enqueue(v)
+		queue.Enqueue(v)
 		if !reflect.DeepEqual(queue.queue, except[i]) {
 			t.Error()
 		}
 	}
 
-	if queue.peek() != 4 {
+	if queue.Peek() != 4 {
 		t.Error()
 	}
 
-	if queue.dequeue(3) {
+	if queue.Dequeue(3) {
 		t.Error()
 	}
 
-	if !queue.dequeue(4) {
+	if !queue.Dequeue(4) {
 		t.Error()
 	}
 
-	if queue.dequeue(4) {
+	if queue.Dequeue(4) {
 		t.Error()
 	}
 }
@@ -160,51 +160,43 @@ func TestSegmentTree(t *testing.T) {
 }
 
 func TestGcd(t *testing.T) {
-	if gcd(2, 3) != 1 {
+	if Gcd(2, 3) != 1 {
 		t.Error()
 	}
 
-	if gcd(2, 4) != 2 {
+	if Gcd(2, 4) != 2 {
 		t.Error()
 	}
 
-	if gcd(6, 9) != 3 {
+	if Gcd(6, 9) != 3 {
 		t.Error()
 	}
 }
 
-func TestMinMaxSumAbs(t *testing.T) {
-	if min(2, 1, 3) != 1 {
+func TestSumAbs(t *testing.T) {
+	if Sum(1, 2, 3, 4) != 10 {
 		t.Error()
 	}
 
-	if max(2, 1, 3) != 3 {
+	if Abs(1) != 1 {
 		t.Error()
 	}
 
-	if sum(1, 2, 3, 4) != 10 {
-		t.Error()
-	}
-
-	if abs(1) != 1 {
-		t.Error()
-	}
-
-	if abs(-1) != 1 {
+	if Abs(-1) != 1 {
 		t.Error()
 	}
 }
 
 func TestPrime(t *testing.T) {
-	if !isPrime(2) {
+	if !IsPrime(2) {
 		t.Error()
 	}
 
-	if !isPrime(3) {
+	if !IsPrime(3) {
 		t.Error()
 	}
 
-	if isPrime(4) {
+	if IsPrime(4) {
 		t.Error()
 	}
 
@@ -230,13 +222,13 @@ func TestCNK(t *testing.T) {
 
 func TestReverse(t *testing.T) {
 	source := []int{1, 2, 3, 4}
-	reverse(source)
+	Reverse(source)
 	if !reflect.DeepEqual(source, []int{4, 3, 2, 1}) {
 		t.Error()
 	}
 
 	source = []int{1, 2, 3, 4, 5}
-	reverse(source)
+	Reverse(source)
 	if !reflect.DeepEqual(source, []int{5, 4, 3, 2, 1}) {
 		t.Error()
 	}
@@ -245,27 +237,27 @@ func TestReverse(t *testing.T) {
 func TestNextPermutation(t *testing.T) {
 	source := []int{1, 2, 3}
 
-	if !nextPermutation(source) || !reflect.DeepEqual(source, []int{1, 3, 2}) {
+	if !NextPermutation(source) || !reflect.DeepEqual(source, []int{1, 3, 2}) {
 		t.Error()
 	}
 
-	if !nextPermutation(source) || !reflect.DeepEqual(source, []int{2, 1, 3}) {
+	if !NextPermutation(source) || !reflect.DeepEqual(source, []int{2, 1, 3}) {
 		t.Error()
 	}
 
-	if !nextPermutation(source) || !reflect.DeepEqual(source, []int{2, 3, 1}) {
+	if !NextPermutation(source) || !reflect.DeepEqual(source, []int{2, 3, 1}) {
 		t.Error()
 	}
 
-	if !nextPermutation(source) || !reflect.DeepEqual(source, []int{3, 1, 2}) {
+	if !NextPermutation(source) || !reflect.DeepEqual(source, []int{3, 1, 2}) {
 		t.Error()
 	}
 
-	if !nextPermutation(source) || !reflect.DeepEqual(source, []int{3, 2, 1}) {
+	if !NextPermutation(source) || !reflect.DeepEqual(source, []int{3, 2, 1}) {
 		t.Error()
 	}
 
-	if nextPermutation(source) || !reflect.DeepEqual(source, []int{1, 2, 3}) {
+	if NextPermutation(source) || !reflect.DeepEqual(source, []int{1, 2, 3}) {
 		t.Error()
 	}
 }

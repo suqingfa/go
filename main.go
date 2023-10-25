@@ -187,38 +187,9 @@ func (this *Trie) Search(word string) bool {
 	return this.find(word, false)
 }
 
+// StartsWith 字典树中是否存在以 prefix 为前缀的词
 func (this *Trie) StartsWith(prefix string) bool {
 	return this.find(prefix, true)
-}
-
-func (this *Trie) Prefix(word string) (string, bool) {
-	if this.root {
-		child := this.findChild(word[0], false)
-		if child == nil {
-			return "", false
-		}
-		return child.Prefix(word)
-	}
-
-	if this.end {
-		return word[:1], true
-	}
-
-	if len(word) == 1 {
-		return "", false
-	}
-
-	child := this.findChild(word[1], false)
-	if child == nil {
-		return "", false
-	}
-
-	prefix, find := child.Prefix(word[1:])
-	if !find {
-		return "", false
-	}
-
-	return word[:1] + prefix, true
 }
 
 // SegmentTree 线段树

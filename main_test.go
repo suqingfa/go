@@ -8,7 +8,13 @@ import (
 func TestUnionFind(t *testing.T) {
 	uf := NewUnionFind[int]()
 
-	uf.union(1, 2)
+	if !uf.union(1, 2) {
+		t.Error()
+	}
+
+	if uf.union(1, 2) {
+		t.Error()
+	}
 
 	if uf.find(2) != 1 {
 		t.Error()

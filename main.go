@@ -323,12 +323,8 @@ func max[T int | int64 | byte | rune | float64](arr ...T) T {
 }
 
 func sum[T int | int64 | byte | rune | float64](arr ...T) T {
-	if len(arr) == 0 {
-		return 0
-	}
-
-	res := arr[0]
-	for i := 1; i < len(arr); i++ {
+	res := T(0)
+	for i := 0; i < len(arr); i++ {
 		res += arr[i]
 	}
 	return res
@@ -407,9 +403,6 @@ func nextPermutation(nums []int) bool {
 
 	i := n - 2
 	for ; i > 0 && nums[i] >= nums[i+1]; i-- {
-	}
-	if i < 0 {
-		i = 0
 	}
 
 	for j := n - 1; j > i; j-- {

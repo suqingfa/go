@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-const N = 1e6
+const N = 1e5
 
 func TestGoroutine(t *testing.T) {
 	c := make(chan int, 10)

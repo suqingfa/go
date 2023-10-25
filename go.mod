@@ -1,4 +1,4 @@
-module leetcode
+module main
 
 go 1.21
 

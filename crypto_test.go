@@ -1,4 +1,4 @@
-package leetcode
+package main
 
 import (
 	"crypto/aes"

@@ -6,6 +6,17 @@ import (
 	"testing"
 )
 
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
 func TestTable(t *testing.T) {
 	file, _ := os.CreateTemp(os.TempDir(), "cpu.prof")
 	println("cpu.prof:", file.Name())

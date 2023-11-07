@@ -36,7 +36,7 @@ func IsPrime(n int) bool {
 	return true
 }
 
-func initPrimes(n int) []int {
+func InitPrimes(n int) []int {
 	m := make([]bool, n+1)
 
 	for i := 2; i <= n; i++ {

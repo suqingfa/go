@@ -46,9 +46,16 @@ func TestPrime(t *testing.T) {
 		t.Error()
 	}
 
-	primes := initPrimes(11)
-	if !reflect.DeepEqual(primes, []int{2, 3, 5, 7, 11}) {
-		t.Error()
+	n := 1_000_000
+	m := make(map[int]bool)
+	for _, prime := range InitPrimes(n) {
+		m[prime] = true
+	}
+
+	for i := 2; i <= n; i++ {
+		if IsPrime(i) && !m[i] || !IsPrime(i) && m[i] {
+			t.Error()
+		}
 	}
 }
 

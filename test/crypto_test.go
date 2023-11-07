@@ -5,9 +5,13 @@ import (
 	"crypto/ed25519"
 	"crypto/rand"
 	"crypto/sha256"
+	"crypto/x509"
 	"encoding/base64"
 	"encoding/hex"
+	"encoding/pem"
 	"fmt"
+	"github.com/emirpasic/gods/utils"
+	"os"
 	"testing"
 )
 
@@ -65,5 +69,21 @@ func TestPublicKey(t *testing.T) {
 	verify := ed25519.Verify(publicKey, message, sign)
 	if !verify {
 		t.Error()
+	}
+}
+
+func TestX509(t *testing.T) {
+	bytes, err := os.ReadFile("/etc/ssl/certs/ca-certificates.crt")
+	if err != nil {
+		t.Error(err)
+	}
+
+	for block, rest := pem.Decode(bytes); block != nil && block.Type == "CERTIFICATE"; block, rest = pem.Decode(rest) {
+		certificate, err := x509.ParseCertificate(block.Bytes)
+		if err != nil || certificate == nil {
+			t.Error(err)
+		}
+
+		println(utils.ToString(certificate.Subject))
 	}
 }

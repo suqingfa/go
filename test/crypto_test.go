@@ -10,7 +10,6 @@ import (
 	"encoding/hex"
 	"encoding/pem"
 	"fmt"
-	"github.com/emirpasic/gods/utils"
 	"os"
 	"testing"
 )
@@ -21,10 +20,10 @@ func TestSHA(t *testing.T) {
 	sha := sha256.New()
 	sha.Write(data)
 	sha1 := fmt.Sprintf("%x", sha.Sum(nil))
-	println(sha1)
+	t.Log(sha1)
 
 	sha2 := fmt.Sprintf("%x", sha256.Sum256(data))
-	println(sha2)
+	t.Log(sha2)
 
 	if sha1 != sha2 {
 		t.Error()
@@ -34,7 +33,7 @@ func TestSHA(t *testing.T) {
 func TestAes(t *testing.T) {
 	key := make([]byte, 16)
 	_, _ = rand.Read(key)
-	println("key\t\t", hex.EncodeToString(key))
+	t.Log("key\t\t", hex.EncodeToString(key))
 
 	cipher, err := aes.NewCipher(key)
 	if err != nil {
@@ -45,12 +44,12 @@ func TestAes(t *testing.T) {
 
 	encrypt := make([]byte, 16)
 	cipher.Encrypt(encrypt, src)
-	println("encrypt\t", hex.EncodeToString(encrypt))
+	t.Log("encrypt\t", hex.EncodeToString(encrypt))
 
 	decrypt := make([]byte, 16)
 	cipher.Decrypt(decrypt, encrypt)
-	println("decrypt\t", hex.EncodeToString(decrypt))
-	println("string\t", string(decrypt))
+	t.Log("decrypt\t", hex.EncodeToString(decrypt))
+	t.Log("string\t", string(decrypt))
 }
 
 func TestPublicKey(t *testing.T) {
@@ -59,12 +58,12 @@ func TestPublicKey(t *testing.T) {
 		t.Error(err)
 	}
 
-	println("public key", base64.StdEncoding.EncodeToString(publicKey))
-	println("private key", base64.StdEncoding.EncodeToString(privateKey))
+	t.Log("public key", base64.StdEncoding.EncodeToString(publicKey))
+	t.Log("private key", base64.StdEncoding.EncodeToString(privateKey))
 
 	message := []byte("hello")
 	sign := ed25519.Sign(privateKey, message)
-	println("sign", hex.EncodeToString(sign))
+	t.Log("sign", hex.EncodeToString(sign))
 
 	verify := ed25519.Verify(publicKey, message, sign)
 	if !verify {
@@ -84,6 +83,6 @@ func TestX509(t *testing.T) {
 			t.Error(err)
 		}
 
-		println(utils.ToString(certificate.Subject))
+		t.Log(certificate.Subject)
 	}
 }

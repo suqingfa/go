@@ -11,7 +11,7 @@ import (
 )
 
 func TestToString(t *testing.T) {
-	println(utils.ToString([]string{"hello", "world"}))
+	t.Log(utils.ToString([]string{"hello", "world"}))
 }
 
 func TestSliceEqual(t *testing.T) {
@@ -19,8 +19,13 @@ func TestSliceEqual(t *testing.T) {
 	b := []int{1, 2, 3, 4}
 	c := []int{1, 3, 2, 4}
 
-	println(reflect.DeepEqual(a, b))
-	println(reflect.DeepEqual(a, c))
+	if !reflect.DeepEqual(a, b) {
+		t.Fail()
+	}
+
+	if reflect.DeepEqual(a, c) {
+		t.Fail()
+	}
 }
 
 func TestJson(t *testing.T) {
@@ -29,7 +34,7 @@ func TestJson(t *testing.T) {
 	m := make(map[string]int)
 	_ = json.Unmarshal(bytes, &m)
 
-	println(string(bytes), utils.ToString(m))
+	t.Log(string(bytes), m)
 
 	if len(m) != 2 || m["a"] != 1 || m["b"] != 2 {
 		t.Error()
@@ -79,7 +84,7 @@ func TestTimeParse(t *testing.T) {
 		t.Error()
 		return
 	}
-	println(utils.ToString(parse))
+	t.Log(parse)
 }
 
 func BenchmarkToString(b *testing.B) {

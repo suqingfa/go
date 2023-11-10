@@ -3,7 +3,6 @@ package test
 import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
-	"log"
 	"testing"
 )
 
@@ -22,7 +21,7 @@ func TestSql(t *testing.T) {
 	for rows.Next() {
 		var version string
 		_ = rows.Scan(&version)
-		log.Println("sql version:", version)
+		t.Log("sql version:", version)
 	}
 
 	_, _ = db.Exec("create table user(id int primary key, name varchar(255), password varchar(255))")
@@ -36,7 +35,7 @@ func TestSql(t *testing.T) {
 	query, _ := db.Query("select id, name, password from user")
 	for query.Next() {
 		columns, _ := rows.Columns()
-		log.Println("entity:", columns)
+		t.Log("entity:", columns)
 	}
 
 	_ = tx.Commit()

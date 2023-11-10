@@ -28,7 +28,7 @@ func TestGoroutine(t *testing.T) {
 	if value != N {
 		t.Error()
 	}
-	println("value: ", value)
+	t.Log("value: ", value)
 }
 
 func TestLock(t *testing.T) {
@@ -54,7 +54,7 @@ func TestLock(t *testing.T) {
 	if value != N {
 		t.Error()
 	}
-	println("value: ", value)
+	t.Log("value: ", value)
 }
 
 func TestAtomic(t *testing.T) {
@@ -77,5 +77,5 @@ func TestAtomic(t *testing.T) {
 	if value.Load() != N {
 		t.Error()
 	}
-	println("value: ", value.Load())
+	t.Log("value: ", value.Load())
 }

@@ -81,6 +81,9 @@ func initCNK(n int) [][]int {
 
 func NextPermutation(arr []int) bool {
 	n := len(arr)
+	if n <= 1 {
+		return false
+	}
 
 	i := n - 2
 	for ; i > 0 && arr[i] >= arr[i+1]; i-- {

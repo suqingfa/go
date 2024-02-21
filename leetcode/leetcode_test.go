@@ -7,10 +7,13 @@ import (
 )
 
 func TestTable(t *testing.T) {
-	file, _ := os.CreateTemp(os.TempDir(), "cpu.prof")
+	file, _ := os.CreateTemp("", "cpu.prof")
 	println("cpu.prof:", file.Name())
-	defer file.Close()
-	pprof.StartCPUProfile(file)
+	defer func(file *os.File) {
+		_ = file.Close()
+	}(file)
+
+	_ = pprof.StartCPUProfile(file)
 	defer pprof.StopCPUProfile()
 
 	tests := []struct {

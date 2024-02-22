@@ -100,10 +100,3 @@ func NextPermutation(arr []int) bool {
 	sort.Ints(arr)
 	return false
 }
-
-func Reverse[T any](arr []T) {
-	n := len(arr)
-	for i := 0; i < n/2; i++ {
-		arr[i], arr[n-1-i] = arr[n-1-i], arr[i]
-	}
-}

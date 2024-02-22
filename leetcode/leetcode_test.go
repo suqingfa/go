@@ -29,14 +29,14 @@ func TestTable(t *testing.T) {
 		})
 	}
 
-	const N = 1e4
+	const N int = 1e4
 	nums := make([]int, N)
-	for i := 0; i < N; i++ {
+	for i := range N {
 		nums[i] = 1
 	}
 
 	matrix := make([][]int, N)
-	for i := 0; i < N; i++ {
+	for i := range N {
 		matrix[i] = make([]int, N)
 	}
 }

@@ -2,13 +2,12 @@ package ds
 
 import (
 	"reflect"
-	"sort"
 	"testing"
 )
 
 func TestMonotonicStack(t *testing.T) {
 	source := []int{3, 1, 2, 3, 2, 1, 4}
-	stack := NewMonotonicStack[sort.IntSlice](source)
+	stack := NewMonotonicStack(source)
 
 	except := [][]int{
 		{},           // [3]

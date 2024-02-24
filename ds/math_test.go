@@ -73,20 +73,6 @@ func TestCNK(t *testing.T) {
 	}
 }
 
-func TestReverse(t *testing.T) {
-	source := []int{1, 2, 3, 4}
-	Reverse(source)
-	if !reflect.DeepEqual(source, []int{4, 3, 2, 1}) {
-		t.Error()
-	}
-
-	source = []int{1, 2, 3, 4, 5}
-	Reverse(source)
-	if !reflect.DeepEqual(source, []int{5, 4, 3, 2, 1}) {
-		t.Error()
-	}
-}
-
 func TestNextPermutation(t *testing.T) {
 	source := []int{1, 2, 3}
 

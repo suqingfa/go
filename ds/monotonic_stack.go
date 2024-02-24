@@ -1,16 +1,18 @@
 package ds
 
-import "sort"
+import (
+	"cmp"
+)
 
-// MonotonicStack 单调栈 从栈顶到栈底的元素是单调递增（或者单调递减）
-type MonotonicStack[T sort.Interface] struct {
-	source   T
+// MonotonicStack 单调栈 从栈顶到栈底的元素是单调递增
+type MonotonicStack[T cmp.Ordered] struct {
+	source   []T
 	stack    []int
 	topIndex int
 }
 
-func NewMonotonicStack[T sort.Interface](source T) *MonotonicStack[T] {
-	return &MonotonicStack[T]{source, make([]int, source.Len()), 0}
+func NewMonotonicStack[T cmp.Ordered](source []T) *MonotonicStack[T] {
+	return &MonotonicStack[T]{source, make([]int, len(source)), 0}
 }
 
 func (s *MonotonicStack[T]) Size() int {
@@ -35,7 +37,7 @@ func (s *MonotonicStack[T]) Pop() int {
 // 返回值 栈顶大于index的索引
 func (s *MonotonicStack[T]) Push(index int) []int {
 	res := make([]int, 0)
-	for s.Size() > 0 && s.source.Less(s.Top(), index) {
+	for s.Size() > 0 && s.source[s.Top()] < s.source[index] {
 		res = append(res, s.Pop())
 	}
 

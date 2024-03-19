@@ -2,10 +2,10 @@ package test
 
 import (
 	"encoding/json"
-	"github.com/emirpasic/gods/queues/linkedlistqueue"
-	"github.com/emirpasic/gods/queues/priorityqueue"
-	"github.com/emirpasic/gods/utils"
-	"reflect"
+	"github.com/emirpasic/gods/v2/queues/linkedlistqueue"
+	"github.com/emirpasic/gods/v2/queues/priorityqueue"
+	"github.com/emirpasic/gods/v2/utils"
+	"slices"
 	"testing"
 	"time"
 )
@@ -19,11 +19,11 @@ func TestSliceEqual(t *testing.T) {
 	b := []int{1, 2, 3, 4}
 	c := []int{1, 3, 2, 4}
 
-	if !reflect.DeepEqual(a, b) {
+	if !slices.Equal(a, b) {
 		t.Fail()
 	}
 
-	if reflect.DeepEqual(a, c) {
+	if slices.Equal(a, c) {
 		t.Fail()
 	}
 }
@@ -42,7 +42,7 @@ func TestJson(t *testing.T) {
 }
 
 func TestQueue(t *testing.T) {
-	q := linkedlistqueue.New()
+	q := linkedlistqueue.New[int]()
 	q.Enqueue(0)
 	q.Enqueue(1)
 	q.Enqueue(2)
@@ -56,12 +56,12 @@ func TestQueue(t *testing.T) {
 		if !ok {
 			t.Error()
 		}
-		if value.(int) != i {
+		if value != i {
 			t.Error()
 		}
 	}
 
-	pq := priorityqueue.NewWith(utils.IntComparator)
+	pq := priorityqueue.New[int]()
 	pq.Enqueue(3)
 	pq.Enqueue(2)
 	pq.Enqueue(1)
@@ -72,7 +72,7 @@ func TestQueue(t *testing.T) {
 		if !ok {
 			t.Error()
 		}
-		if value.(int) != i {
+		if value != i {
 			t.Error()
 		}
 	}

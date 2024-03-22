@@ -1,6 +1,9 @@
 package ds
 
-import "sort"
+import (
+	"cmp"
+	"slices"
+)
 
 func Gcd(a, b int) int {
 	if b == 0 {
@@ -83,7 +86,7 @@ func initCNK(n int) [][]int {
 	return c
 }
 
-func NextPermutation(arr []int) bool {
+func NextPermutation[S ~[]E, E cmp.Ordered](arr S) bool {
 	n := len(arr)
 	if n <= 1 {
 		return false
@@ -96,11 +99,11 @@ func NextPermutation(arr []int) bool {
 	for j := n - 1; j > i; j-- {
 		if arr[j] > arr[i] {
 			arr[i], arr[j] = arr[j], arr[i]
-			sort.Ints(arr[i+1:])
+			slices.Sort(arr[i+1:])
 			return true
 		}
 	}
 
-	sort.Ints(arr)
+	slices.Sort(arr)
 	return false
 }

@@ -2,6 +2,7 @@ package ds
 
 import (
 	"reflect"
+	"slices"
 	"testing"
 )
 
@@ -76,27 +77,27 @@ func TestCNK(t *testing.T) {
 func TestNextPermutation(t *testing.T) {
 	source := []int{1, 2, 3}
 
-	if !NextPermutation(source) || !reflect.DeepEqual(source, []int{1, 3, 2}) {
+	if !NextPermutation(source) || !slices.Equal(source, []int{1, 3, 2}) {
 		t.Error()
 	}
 
-	if !NextPermutation(source) || !reflect.DeepEqual(source, []int{2, 1, 3}) {
+	if !NextPermutation(source) || !slices.Equal(source, []int{2, 1, 3}) {
 		t.Error()
 	}
 
-	if !NextPermutation(source) || !reflect.DeepEqual(source, []int{2, 3, 1}) {
+	if !NextPermutation(source) || !slices.Equal(source, []int{2, 3, 1}) {
 		t.Error()
 	}
 
-	if !NextPermutation(source) || !reflect.DeepEqual(source, []int{3, 1, 2}) {
+	if !NextPermutation(source) || !slices.Equal(source, []int{3, 1, 2}) {
 		t.Error()
 	}
 
-	if !NextPermutation(source) || !reflect.DeepEqual(source, []int{3, 2, 1}) {
+	if !NextPermutation(source) || !slices.Equal(source, []int{3, 2, 1}) {
 		t.Error()
 	}
 
-	if NextPermutation(source) || !reflect.DeepEqual(source, []int{1, 2, 3}) {
+	if NextPermutation(source) || !slices.Equal(source, []int{1, 2, 3}) {
 		t.Error()
 	}
 }

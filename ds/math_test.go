@@ -35,6 +35,14 @@ func TestSumAbs(t *testing.T) {
 }
 
 func TestPrime(t *testing.T) {
+	if !IsPrime(0) {
+		t.Error()
+	}
+
+	if !IsPrime(1) {
+		t.Error()
+	}
+
 	if !IsPrime(2) {
 		t.Error()
 	}
@@ -76,6 +84,8 @@ func TestCNK(t *testing.T) {
 
 func TestNextPermutation(t *testing.T) {
 	source := []int{1, 2, 3}
+
+	NextPermutation(source[:1])
 
 	if !NextPermutation(source) || !slices.Equal(source, []int{1, 3, 2}) {
 		t.Error()

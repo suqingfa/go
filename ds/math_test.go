@@ -35,11 +35,11 @@ func TestSumAbs(t *testing.T) {
 }
 
 func TestPrime(t *testing.T) {
-	if !IsPrime(0) {
+	if IsPrime(0) {
 		t.Error()
 	}
 
-	if !IsPrime(1) {
+	if IsPrime(1) {
 		t.Error()
 	}
 

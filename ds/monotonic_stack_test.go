@@ -7,7 +7,9 @@ import (
 
 func TestMonotonicStack(t *testing.T) {
 	source := []int{3, 1, 2, 3, 2, 1, 4}
-	stack := NewMonotonicStack(source)
+	stack := NewMonotonicStack(source, func(top, current int) bool {
+		return top < current
+	})
 
 	except := [][]int{
 		{},           // [3]

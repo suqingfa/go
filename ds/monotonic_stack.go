@@ -9,10 +9,11 @@ type MonotonicStack[T cmp.Ordered] struct {
 	source   []T
 	stack    []int
 	topIndex int
+	less     func(top, current T) bool
 }
 
-func NewMonotonicStack[T cmp.Ordered](source []T) *MonotonicStack[T] {
-	return &MonotonicStack[T]{source, make([]int, len(source)), 0}
+func NewMonotonicStack[T cmp.Ordered](source []T, less func(top, current T) bool) *MonotonicStack[T] {
+	return &MonotonicStack[T]{source, make([]int, len(source)), 0, less}
 }
 
 func (s *MonotonicStack[T]) Size() int {
@@ -37,7 +38,7 @@ func (s *MonotonicStack[T]) Pop() int {
 // 返回值 栈顶大于index的索引
 func (s *MonotonicStack[T]) Push(index int) []int {
 	res := make([]int, 0)
-	for s.Size() > 0 && s.source[s.Top()] < s.source[index] {
+	for s.Size() > 0 && s.less(s.source[s.Top()], s.source[index]) {
 		res = append(res, s.Pop())
 	}
 

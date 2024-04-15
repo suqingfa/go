@@ -1,7 +1,7 @@
 package ds
 
 import (
-	"reflect"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -21,24 +21,12 @@ func TestMonotonicQueue(t *testing.T) {
 
 	for i, v := range source {
 		queue.Enqueue(v)
-		if !reflect.DeepEqual(queue.queue, except[i]) {
-			t.Error()
-		}
+		assert.Equal(t, except[i], queue.queue)
 	}
 
-	if queue.Peek() != 4 {
-		t.Error()
-	}
+	assert.Equal(t, 4, queue.Peek())
 
-	if queue.Dequeue(3) {
-		t.Error()
-	}
-
-	if !queue.Dequeue(4) {
-		t.Error()
-	}
-
-	if queue.Dequeue(4) {
-		t.Error()
-	}
+	assert.False(t, queue.Dequeue(3))
+	assert.True(t, queue.Dequeue(4))
+	assert.False(t, queue.Dequeue(4))
 }

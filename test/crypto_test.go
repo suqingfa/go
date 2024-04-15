@@ -10,6 +10,7 @@ import (
 	"encoding/hex"
 	"encoding/pem"
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
 )
@@ -20,14 +21,11 @@ func TestSHA(t *testing.T) {
 	sha := sha256.New()
 	sha.Write(data)
 	sha1 := fmt.Sprintf("%x", sha.Sum(nil))
-	t.Log(sha1)
 
 	sha2 := fmt.Sprintf("%x", sha256.Sum256(data))
 	t.Log(sha2)
 
-	if sha1 != sha2 {
-		t.Error()
-	}
+	assert.Equal(t, sha1, sha2)
 }
 
 func TestAes(t *testing.T) {
@@ -36,9 +34,7 @@ func TestAes(t *testing.T) {
 	t.Log("key\t\t", hex.EncodeToString(key))
 
 	cipher, err := aes.NewCipher(key)
-	if err != nil {
-		t.Error(err)
-	}
+	assert.Nil(t, err)
 
 	src := []byte("0123456789abcdef")
 
@@ -54,9 +50,7 @@ func TestAes(t *testing.T) {
 
 func TestPublicKey(t *testing.T) {
 	publicKey, privateKey, err := ed25519.GenerateKey(rand.Reader)
-	if err != nil {
-		t.Error(err)
-	}
+	assert.Nil(t, err)
 
 	t.Log("public key", base64.StdEncoding.EncodeToString(publicKey))
 	t.Log("private key", base64.StdEncoding.EncodeToString(privateKey))
@@ -66,22 +60,17 @@ func TestPublicKey(t *testing.T) {
 	t.Log("sign", hex.EncodeToString(sign))
 
 	verify := ed25519.Verify(publicKey, message, sign)
-	if !verify {
-		t.Error()
-	}
+	assert.True(t, verify)
 }
 
 func TestX509(t *testing.T) {
 	bytes, err := os.ReadFile("/etc/ssl/certs/ca-certificates.crt")
-	if err != nil {
-		t.Error(err)
-	}
+	assert.Nil(t, err)
 
 	for block, rest := pem.Decode(bytes); block != nil && block.Type == "CERTIFICATE"; block, rest = pem.Decode(rest) {
 		certificate, err := x509.ParseCertificate(block.Bytes)
-		if err != nil || certificate == nil {
-			t.Error(err)
-		}
+		assert.Nil(t, err)
+		assert.NotNil(t, certificate)
 
 		t.Log(certificate.Subject)
 	}

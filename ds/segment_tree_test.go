@@ -1,6 +1,7 @@
 package ds
 
 import (
+	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"testing"
 )
@@ -27,9 +28,7 @@ func TestSegmentTree(t *testing.T) {
 				}
 			}
 
-			if segmentTree.Search(i, j) != cnt {
-				t.Error()
-			}
+			assert.Equal(t, cnt, segmentTree.Search(i, j))
 		}
 	}
 }

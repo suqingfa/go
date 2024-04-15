@@ -1,59 +1,39 @@
 package ds
 
 import (
-	"reflect"
-	"slices"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestGcd(t *testing.T) {
-	if Gcd(2, 3) != 1 {
-		t.Error()
-	}
+	assert.Equal(t, 1, Gcd(2, 3))
+	assert.Equal(t, 2, Gcd(2, 4))
+	assert.Equal(t, 3, Gcd(6, 9))
+}
 
-	if Gcd(2, 4) != 2 {
-		t.Error()
-	}
-
-	if Gcd(6, 9) != 3 {
-		t.Error()
-	}
+func TestModPower(t *testing.T) {
+	const M = 1e9 + 7
+	assert.Equal(t, 1, ModPower(2, 0, M))
+	assert.Equal(t, 2, ModPower(2, 1, M))
+	assert.Equal(t, 4, ModPower(2, 2, M))
+	assert.Equal(t, 8, ModPower(2, 3, M))
+	assert.Equal(t, 16, ModPower(2, 4, M))
+	assert.Equal(t, 32, ModPower(2, 5, M))
+	assert.Equal(t, 140625001, ModPower(2, 1e9, M))
 }
 
 func TestSumAbs(t *testing.T) {
-	if Sum(1, 2, 3, 4) != 10 {
-		t.Error()
-	}
-
-	if Abs(1) != 1 {
-		t.Error()
-	}
-
-	if Abs(-1) != 1 {
-		t.Error()
-	}
+	assert.Equal(t, 10, Sum(1, 2, 3, 4))
+	assert.Equal(t, 1, Abs(1))
+	assert.Equal(t, 1, Abs(-1))
 }
 
 func TestPrime(t *testing.T) {
-	if IsPrime(0) {
-		t.Error()
-	}
-
-	if IsPrime(1) {
-		t.Error()
-	}
-
-	if !IsPrime(2) {
-		t.Error()
-	}
-
-	if !IsPrime(3) {
-		t.Error()
-	}
-
-	if IsPrime(4) {
-		t.Error()
-	}
+	assert.False(t, IsPrime(0))
+	assert.False(t, IsPrime(1))
+	assert.True(t, IsPrime(2))
+	assert.True(t, IsPrime(3))
+	assert.False(t, IsPrime(4))
 
 	n := 1_000_000
 	m := make(map[int]bool)
@@ -62,52 +42,42 @@ func TestPrime(t *testing.T) {
 	}
 
 	for i := 2; i <= n; i++ {
-		if IsPrime(i) && !m[i] || !IsPrime(i) && m[i] {
-			t.Error()
-		}
+		assert.False(t, IsPrime(i) && !m[i] || !IsPrime(i) && m[i])
 	}
 }
 
 func TestCNK(t *testing.T) {
 	cnk := initCNK(5)
-	if !reflect.DeepEqual(cnk, [][]int{
+	assert.Equal(t, [][]int{
 		{1, 0, 0, 0, 0, 0},
 		{1, 1, 0, 0, 0, 0},
 		{1, 2, 1, 0, 0, 0},
 		{1, 3, 3, 1, 0, 0},
 		{1, 4, 6, 4, 1, 0},
 		{1, 5, 10, 10, 5, 1},
-	}) {
-		t.Error()
-	}
+	}, cnk)
 }
 
 func TestNextPermutation(t *testing.T) {
 	source := []int{1, 2, 3}
 
-	NextPermutation(source[:1])
+	assert.False(t, NextPermutation(source[:1]))
 
-	if !NextPermutation(source) || !slices.Equal(source, []int{1, 3, 2}) {
-		t.Error()
-	}
+	assert.True(t, NextPermutation(source))
+	assert.Equal(t, []int{1, 3, 2}, source)
 
-	if !NextPermutation(source) || !slices.Equal(source, []int{2, 1, 3}) {
-		t.Error()
-	}
+	assert.True(t, NextPermutation(source))
+	assert.Equal(t, []int{2, 1, 3}, source)
 
-	if !NextPermutation(source) || !slices.Equal(source, []int{2, 3, 1}) {
-		t.Error()
-	}
+	assert.True(t, NextPermutation(source))
+	assert.Equal(t, []int{2, 3, 1}, source)
 
-	if !NextPermutation(source) || !slices.Equal(source, []int{3, 1, 2}) {
-		t.Error()
-	}
+	assert.True(t, NextPermutation(source))
+	assert.Equal(t, []int{3, 1, 2}, source)
 
-	if !NextPermutation(source) || !slices.Equal(source, []int{3, 2, 1}) {
-		t.Error()
-	}
+	assert.True(t, NextPermutation(source))
+	assert.Equal(t, []int{3, 2, 1}, source)
 
-	if NextPermutation(source) || !slices.Equal(source, []int{1, 2, 3}) {
-		t.Error()
-	}
+	assert.False(t, NextPermutation(source))
+	assert.Equal(t, []int{1, 2, 3}, source)
 }

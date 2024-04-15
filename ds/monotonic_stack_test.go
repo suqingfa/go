@@ -1,7 +1,7 @@
 package ds
 
 import (
-	"reflect"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -23,8 +23,6 @@ func TestMonotonicStack(t *testing.T) {
 
 	for i := 0; i < len(source); i++ {
 		push := stack.Push(i)
-		if !reflect.DeepEqual(push, except[i]) {
-			t.Error(push)
-		}
+		assert.Equal(t, except[i], push)
 	}
 }

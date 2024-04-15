@@ -1,27 +1,18 @@
 package ds
 
-import "testing"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
 func TestUnionFind(t *testing.T) {
 	uf := NewUnionFind[int]()
 
-	if !uf.Union(1, 2) {
-		t.Error()
-	}
+	assert.True(t, uf.Union(1, 2))
+	assert.False(t, uf.Union(1, 2))
 
-	if uf.Union(1, 2) {
-		t.Error()
-	}
+	assert.Equal(t, 1, uf.Find(2))
 
-	if uf.Find(2) != 1 {
-		t.Error()
-	}
-
-	if !uf.Connected(1, 2) {
-		t.Error()
-	}
-
-	if uf.Connected(1, 3) {
-		t.Error()
-	}
+	assert.True(t, uf.Connected(1, 2))
+	assert.False(t, uf.Connected(1, 3))
 }

@@ -1,6 +1,7 @@
 package test
 
 import (
+	"github.com/stretchr/testify/assert"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -25,10 +26,7 @@ func TestGoroutine(t *testing.T) {
 		value += <-c
 	}
 
-	if value != N {
-		t.Error()
-	}
-	t.Log("value: ", value)
+	assert.Equal(t, int(N), value)
 }
 
 func TestLock(t *testing.T) {
@@ -51,10 +49,7 @@ func TestLock(t *testing.T) {
 		<-c
 	}
 
-	if value != N {
-		t.Error()
-	}
-	t.Log("value: ", value)
+	assert.Equal(t, int(N), value)
 }
 
 func TestAtomic(t *testing.T) {
@@ -74,8 +69,5 @@ func TestAtomic(t *testing.T) {
 		<-c
 	}
 
-	if value.Load() != N {
-		t.Error()
-	}
-	t.Log("value: ", value.Load())
+	assert.Equal(t, int64(N), value.Load())
 }

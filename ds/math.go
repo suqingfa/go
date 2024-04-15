@@ -13,6 +13,22 @@ func Gcd(a, b int) int {
 	return Gcd(b, a%b)
 }
 
+func ModPower(base, n, mod int) int {
+	if n == 0 {
+		return 1
+	} else if n == 1 {
+		return base % mod
+	}
+
+	res := ModPower(base, n/2, mod)
+	res = (res * res) % mod
+	if n%2 == 0 {
+		return res
+	} else {
+		return (res * base) % mod
+	}
+}
+
 func Sum[T int | int64 | byte | rune | float64](arr ...T) T {
 	res := T(0)
 	for i := 0; i < len(arr); i++ {

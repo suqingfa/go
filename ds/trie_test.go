@@ -1,6 +1,9 @@
 package ds
 
-import "testing"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
 func TestTrie(t *testing.T) {
 	trie := NewTrie()
@@ -20,9 +23,7 @@ func TestTrie(t *testing.T) {
 	}
 
 	for s, b := range searchExcept {
-		if trie.Search(s) != b {
-			t.Error(s, b)
-		}
+		assert.Equal(t, b, trie.Search(s))
 	}
 
 	startWithExcept := map[string]bool{
@@ -35,8 +36,6 @@ func TestTrie(t *testing.T) {
 	}
 
 	for s, b := range startWithExcept {
-		if trie.StartsWith(s) != b {
-			t.Error(s, b)
-		}
+		assert.Equal(t, b, trie.StartsWith(s))
 	}
 }

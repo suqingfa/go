@@ -5,6 +5,7 @@ import (
 	"github.com/emirpasic/gods/v2/queues/linkedlistqueue"
 	"github.com/emirpasic/gods/v2/queues/priorityqueue"
 	"github.com/emirpasic/gods/v2/utils"
+	"github.com/stretchr/testify/assert"
 	"slices"
 	"testing"
 	"time"
@@ -19,13 +20,8 @@ func TestSliceEqual(t *testing.T) {
 	b := []int{1, 2, 3, 4}
 	c := []int{1, 3, 2, 4}
 
-	if !slices.Equal(a, b) {
-		t.Fail()
-	}
-
-	if slices.Equal(a, c) {
-		t.Fail()
-	}
+	assert.True(t, slices.Equal(a, b))
+	assert.False(t, slices.Equal(a, c))
 }
 
 func TestJson(t *testing.T) {
@@ -36,9 +32,9 @@ func TestJson(t *testing.T) {
 
 	t.Log(string(bytes), m)
 
-	if len(m) != 2 || m["a"] != 1 || m["b"] != 2 {
-		t.Error()
-	}
+	assert.Equal(t, 2, len(m))
+	assert.Equal(t, 1, m["a"])
+	assert.Equal(t, 2, m["b"])
 }
 
 func TestQueue(t *testing.T) {
@@ -47,18 +43,12 @@ func TestQueue(t *testing.T) {
 	q.Enqueue(1)
 	q.Enqueue(2)
 	q.Enqueue(3)
-	if q.Empty() {
-		t.Error()
-	}
+	assert.False(t, q.Empty())
 
 	for i := 0; i < 4; i++ {
 		value, ok := q.Dequeue()
-		if !ok {
-			t.Error()
-		}
-		if value != i {
-			t.Error()
-		}
+		assert.True(t, ok)
+		assert.Equal(t, i, value)
 	}
 
 	pq := priorityqueue.New[int]()
@@ -69,21 +59,14 @@ func TestQueue(t *testing.T) {
 
 	for i := 0; i < 4; i++ {
 		value, ok := pq.Dequeue()
-		if !ok {
-			t.Error()
-		}
-		if value != i {
-			t.Error()
-		}
+		assert.True(t, ok)
+		assert.Equal(t, i, value)
 	}
 }
 
 func TestTimeParse(t *testing.T) {
 	parse, err := time.Parse("2006:01:02:15:04:05", "2000:01:02:03:04:05")
-	if err != nil {
-		t.Error()
-		return
-	}
+	assert.Nil(t, err)
 	t.Log(parse)
 }
 

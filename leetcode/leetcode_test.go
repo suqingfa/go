@@ -1,6 +1,7 @@
 package leetcode
 
 import (
+	"github.com/stretchr/testify/assert"
 	"os"
 	"runtime/pprof"
 	"testing"
@@ -26,17 +27,7 @@ func TestTable(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
+			assert.True(t, test.output == 0)
 		})
-	}
-
-	const N int = 1e4
-	nums := make([]int, N)
-	for i := range N {
-		nums[i] = 1
-	}
-
-	matrix := make([][]int, N)
-	for i := range N {
-		matrix[i] = make([]int, N)
 	}
 }

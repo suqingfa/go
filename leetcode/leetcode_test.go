@@ -27,7 +27,7 @@ func TestTable(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			assert.True(t, test.output == 0)
+			assert.Equal(t, test.output, 0)
 		})
 	}
 }

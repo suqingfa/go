@@ -53,6 +53,49 @@
 
 不断重复以上过程，直到集合 S 为空。检查图中是否存在任何边，如果有，那么这个图一定有环路，否则返回 L，L 中顶点的顺序就是拓扑排序的结果。
 
+# KMP
+
+| index   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+|---------|---|---|---|---|---|---|---|---|---|
+| kmp     | 0 | 0 | 0 | 1 | 2 | 3 | 0 | 1 | 2 |
+| pattern | a | b | c | a | b | c | c | a | b |
+
+```go
+package main
+
+type InfiniteStream interface {
+  Next() int
+}
+
+// 在无限流中寻找匹配 https://leetcode.cn/problems/find-pattern-in-infinite-stream-ii/description/
+func findPattern(stream InfiniteStream, pattern []int) int {
+  kmp := make([]int, len(pattern))
+  for i := 1; i < len(kmp); i++ {
+    if pattern[i] == pattern[kmp[i-1]] {
+      kmp[i] = kmp[i] + 1
+    }
+  }
+
+  for i, s := 0, make([]int, 0, 2*1e5); ; i++ {
+    if len(s) < len(pattern) {
+      s = append(s, stream.Next())
+    }
+
+    for j := 0; j < len(s); j++ {
+      if s[j] != pattern[j] {
+        s = s[kmp[j]+1:]
+        break
+      }
+    }
+
+    if len(s) == len(pattern) {
+      return i - len(pattern) + 1
+    }
+  }
+}
+
+```
+
 # 单调栈
 
 # 单调队列

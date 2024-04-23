@@ -45,6 +45,21 @@ func Abs[T int | int64 | byte | rune | float64](n T) T {
 	return n
 }
 
+func Factorization(n int) map[int]int {
+	m := make(map[int]int)
+	for i := 2; i*i <= n; i++ {
+		for ; n%i == 0; n /= i {
+			m[i]++
+		}
+	}
+
+	if n != 1 {
+		m[n]++
+	}
+
+	return m
+}
+
 func IsPrime(n int) bool {
 	if n <= 1 {
 		return false

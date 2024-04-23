@@ -28,6 +28,13 @@ func TestSumAbs(t *testing.T) {
 	assert.Equal(t, 1, Abs(-1))
 }
 
+func TestFactorization(t *testing.T) {
+	assert.Equal(t, map[int]int{3: 1}, Factorization(3))
+	assert.Equal(t, map[int]int{2: 2}, Factorization(4))
+	assert.Equal(t, map[int]int{2: 1, 3: 1}, Factorization(6))
+	assert.Equal(t, map[int]int{2: 3}, Factorization(8))
+}
+
 func TestPrime(t *testing.T) {
 	assert.False(t, IsPrime(0))
 	assert.False(t, IsPrime(1))

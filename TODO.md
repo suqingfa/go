@@ -106,6 +106,58 @@ func findPattern(stream InfiniteStream, pattern []int) int {
 
 # 线段树/前缀和/树状数组
 
+区域和检索 https://leetcode.cn/problems/range-sum-query-mutable/description/
+
+```go
+package main
+
+import "math/bits"
+
+type NumArray struct {
+  tree []int
+}
+
+func Constructor(nums []int) NumArray {
+  numArray := NumArray{make([]int, 2<<bits.Len(uint(len(nums))))}
+  for i, num := range nums {
+    numArray.Update(i, num)
+  }
+  return numArray
+}
+
+func (this *NumArray) update(i int, l int, r int, index int, val int) int {
+  res := 0
+  if l == r {
+    res = val - this.tree[i]
+  } else if mid := (l + r) / 2; index <= mid {
+    res = this.update(2*i+1, l, mid, index, val)
+  } else {
+    res = this.update(2*i+2, mid+1, r, index, val)
+  }
+  this.tree[i] += res
+  return res
+}
+
+func (this *NumArray) Update(index int, val int) {
+  this.update(0, 0, len(this.tree)/2-1, index, val)
+}
+
+func (this *NumArray) sum(i int, l int, r int, left int, right int) int {
+  if l >= left && r <= right {
+    return this.tree[i]
+  } else if l > right || r < left {
+    return 0
+  }
+  mid := (l + r) / 2
+  return this.sum(2*i+1, l, mid, left, right) + this.sum(2*i+2, mid+1, r, left, right)
+}
+
+func (this *NumArray) SumRange(left int, right int) int {
+  return this.sum(0, 0, len(this.tree)/2-1, left, right)
+}
+
+```
+
 # 双指针
 
 # 快速选择

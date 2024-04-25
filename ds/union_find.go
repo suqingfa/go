@@ -9,27 +9,25 @@ func NewUnionFind[T comparable]() *UnionFind[T] {
 	return &UnionFind[T]{make(map[T]T)}
 }
 
-func (s *UnionFind[T]) Find(t T) T {
-	if _, ok := s.leader[t]; !ok {
+func (uf *UnionFind[T]) Find(t T) T {
+	if _, ok := uf.leader[t]; !ok {
 		return t
 	}
-	s.leader[t] = s.Find(s.leader[t])
+	uf.leader[t] = uf.Find(uf.leader[t])
 
-	return s.leader[t]
+	return uf.leader[t]
 }
 
-func (s *UnionFind[T]) Connected(a T, b T) bool {
-	return s.Find(a) == s.Find(b)
+func (uf *UnionFind[T]) IsConnected(a T, b T) bool {
+	return uf.Find(a) == uf.Find(b)
 }
 
-func (s *UnionFind[T]) Union(a T, b T) bool {
-	la := s.Find(a)
-	lb := s.Find(b)
+func (uf *UnionFind[T]) Union(a T, b T) bool {
+	la, lb := uf.Find(a), uf.Find(b)
 	if la == lb {
 		return false
 	}
 
-	s.leader[lb] = la
-
+	uf.leader[lb] = la
 	return true
 }

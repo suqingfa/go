@@ -13,6 +13,6 @@ func TestUnionFind(t *testing.T) {
 
 	assert.Equal(t, 1, uf.Find(2))
 
-	assert.True(t, uf.Connected(1, 2))
-	assert.False(t, uf.Connected(1, 3))
+	assert.True(t, uf.IsConnected(1, 2))
+	assert.False(t, uf.IsConnected(1, 3))
 }

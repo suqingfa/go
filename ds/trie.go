@@ -12,33 +12,33 @@ func NewTrie() *Trie {
 	return &Trie{root: true, child: map[byte]*Trie{}}
 }
 
-func (s *Trie) findChild(c byte, create bool) *Trie {
-	if _, ok := s.child[c]; !ok && create {
-		s.child[c] = &Trie{root: false, child: map[byte]*Trie{}, key: string(c)}
+func (t *Trie) findChild(c byte, create bool) *Trie {
+	if _, ok := t.child[c]; !ok && create {
+		t.child[c] = &Trie{root: false, child: map[byte]*Trie{}, key: string(c)}
 	}
 
-	return s.child[c]
+	return t.child[c]
 }
 
-func (s *Trie) Insert(word string) {
-	if s.root {
-		child := s.findChild(word[0], true)
+func (t *Trie) Insert(word string) {
+	if t.root {
+		child := t.findChild(word[0], true)
 		child.Insert(word)
 		return
 	}
 
 	if len(word) == 1 {
-		s.end = true
+		t.end = true
 		return
 	}
 
-	child := s.findChild(word[1], true)
+	child := t.findChild(word[1], true)
 	child.Insert(word[1:])
 }
 
-func (s *Trie) find(word string, findWithPrefix bool) bool {
-	if s.root {
-		child := s.findChild(word[0], false)
+func (t *Trie) find(word string, findWithPrefix bool) bool {
+	if t.root {
+		child := t.findChild(word[0], false)
 		if child == nil {
 			return false
 		}
@@ -46,21 +46,21 @@ func (s *Trie) find(word string, findWithPrefix bool) bool {
 	}
 
 	if len(word) == 1 {
-		return findWithPrefix || s.end
+		return findWithPrefix || t.end
 	}
 
-	child := s.findChild(word[1], false)
+	child := t.findChild(word[1], false)
 	if child == nil {
 		return false
 	}
 	return child.find(word[1:], findWithPrefix)
 }
 
-func (s *Trie) Search(word string) bool {
-	return s.find(word, false)
+func (t *Trie) Search(word string) bool {
+	return t.find(word, false)
 }
 
 // StartsWith 字典树中是否存在以 prefix 为前缀的词
-func (s *Trie) StartsWith(prefix string) bool {
-	return s.find(prefix, true)
+func (t *Trie) StartsWith(prefix string) bool {
+	return t.find(prefix, true)
 }

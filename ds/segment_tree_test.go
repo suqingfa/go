@@ -2,33 +2,64 @@ package ds
 
 import (
 	"github.com/stretchr/testify/assert"
-	"math/rand"
+	"math"
 	"testing"
 )
 
-func TestSegmentTree(t *testing.T) {
+func TestSegmentTree_Sum(t *testing.T) {
 	const N = 100
-	segmentTree := NewSegmentTree(0, N-1)
+	tree := NewSegmentTree(
+		N,
+		0,
+		func(node *int, val int) { *node = val },
+		func(l int, r int) int { return l + r },
+	)
 
-	ints := make([]int, N*10)
-	for i := range ints {
-		ints[i] = rand.Intn(N)
+	for i := range N {
+		tree.Update(i, i)
 	}
 
-	for _, i := range ints {
-		segmentTree.Insert(i)
+	assert.Equal(t, (0+9)*10/2, tree.Range(0, 9))
+	assert.Equal(t, (10+99)*90/2, tree.Range(10, 99))
+	assert.Equal(t, (0+99)*100/2, tree.Range(0, 99))
+}
+
+func TestSegmentTree_Max(t *testing.T) {
+	nums := []int{3, -1, 2, 5, 4}
+	tree := NewSegmentTree(
+		len(nums),
+		math.MinInt32,
+		func(node *int, val int) { *node = val },
+		func(l int, r int) int { return max(l, r) },
+	)
+
+	for i, num := range nums {
+		tree.Update(i, num)
 	}
 
-	for i := 0; i < N; i++ {
-		for j := i; j < N; j++ {
-			cnt := 0
-			for _, v := range ints {
-				if i <= v && v <= j {
-					cnt++
-				}
-			}
+	assert.Equal(t, 3, tree.Range(0, 2))
+	assert.Equal(t, -1, tree.Range(1, 1))
+	assert.Equal(t, 2, tree.Range(1, 2))
+	assert.Equal(t, 5, tree.Range(0, 4))
+	assert.Equal(t, 5, tree.Range(3, 4))
+}
 
-			assert.Equal(t, cnt, segmentTree.Search(i, j))
-		}
+func TestSegmentTree_Set(t *testing.T) {
+	nums := []int{3, -1, 2, 5, 4}
+	tree := NewSegmentTree(
+		len(nums),
+		math.MinInt32,
+		func(node *int, val int) { *node = max(*node, val) },
+		func(l int, r int) int { return max(l, r) },
+	)
+
+	for i, num := range nums {
+		tree.Update(i, num)
 	}
+
+	assert.Equal(t, 5, tree.Range(0, 4))
+	tree.Update(3, 3)
+	assert.Equal(t, 5, tree.Range(0, 4))
+	tree.Update(3, 6)
+	assert.Equal(t, 6, tree.Range(0, 4))
 }

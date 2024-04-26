@@ -13,7 +13,7 @@ func TestTrie(t *testing.T) {
 	trie.Insert("abc")
 	trie.Insert("abd")
 
-	searchExcept := map[string]bool{
+	findExcept := map[string]bool{
 		"a":    true,
 		"ab":   true,
 		"abc":  true,
@@ -22,11 +22,11 @@ func TestTrie(t *testing.T) {
 		"xy":   false,
 	}
 
-	for s, b := range searchExcept {
-		assert.Equal(t, b, trie.Search(s))
+	for s, b := range findExcept {
+		assert.Equal(t, b, trie.Find(s))
 	}
 
-	startWithExcept := map[string]bool{
+	prefixExcept := map[string]bool{
 		"a":    true,
 		"ab":   true,
 		"abc":  true,
@@ -35,7 +35,7 @@ func TestTrie(t *testing.T) {
 		"xy":   false,
 	}
 
-	for s, b := range startWithExcept {
-		assert.Equal(t, b, trie.StartsWith(s))
+	for s, b := range prefixExcept {
+		assert.Equal(t, b, trie.HasPrefixString(s))
 	}
 }

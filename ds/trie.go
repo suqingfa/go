@@ -2,65 +2,48 @@ package ds
 
 // Trie 字典树
 type Trie struct {
-	child map[byte]*Trie
-	key   string
-	root  bool
-	end   bool
+	children map[rune]*Trie
+	isLeaf   bool
 }
 
 func NewTrie() *Trie {
-	return &Trie{root: true, child: map[byte]*Trie{}}
-}
-
-func (t *Trie) findChild(c byte, create bool) *Trie {
-	if _, ok := t.child[c]; !ok && create {
-		t.child[c] = &Trie{root: false, child: map[byte]*Trie{}, key: string(c)}
-	}
-
-	return t.child[c]
+	return &Trie{map[rune]*Trie{}, false}
 }
 
 func (t *Trie) Insert(word string) {
-	if t.root {
-		child := t.findChild(word[0], true)
-		child.Insert(word)
-		return
+	cur := t
+	for _, r := range word {
+		next, ok := cur.children[r]
+		if !ok {
+			next = NewTrie()
+			cur.children[r] = next
+		}
+		cur = next
 	}
-
-	if len(word) == 1 {
-		t.end = true
-		return
-	}
-
-	child := t.findChild(word[1], true)
-	child.Insert(word[1:])
+	cur.isLeaf = true
 }
 
 func (t *Trie) find(word string, findWithPrefix bool) bool {
-	if t.root {
-		child := t.findChild(word[0], false)
-		if child == nil {
+	next, ok := t, false
+	for _, r := range word {
+		next, ok = next.children[r]
+		if !ok {
 			return false
 		}
-		return child.find(word, findWithPrefix)
 	}
 
-	if len(word) == 1 {
-		return findWithPrefix || t.end
+	if findWithPrefix {
+		return true
 	}
 
-	child := t.findChild(word[1], false)
-	if child == nil {
-		return false
-	}
-	return child.find(word[1:], findWithPrefix)
+	return next.isLeaf
 }
 
-func (t *Trie) Search(word string) bool {
+func (t *Trie) Find(word string) bool {
 	return t.find(word, false)
 }
 
-// StartsWith 字典树中是否存在以 prefix 为前缀的词
-func (t *Trie) StartsWith(prefix string) bool {
+// HasPrefixString 字典树中是否存在以 prefix 为前缀的词
+func (t *Trie) HasPrefixString(prefix string) bool {
 	return t.find(prefix, true)
 }

@@ -2,64 +2,86 @@ package ds
 
 import (
 	"github.com/stretchr/testify/assert"
-	"math"
+	"math/rand"
 	"testing"
 )
 
 func TestSegmentTree_Sum(t *testing.T) {
-	const N = 100
-	tree := NewSegmentTree(
-		N,
-		0,
-		func(node *int, val int) { *node = val },
-		func(l int, r int) int { return l + r },
-	)
+	const N = 1000
+	st := NewSumSegmentTree(N)
 
 	for i := range N {
-		tree.Update(i, i)
+		st.Update(i, i)
 	}
 
-	assert.Equal(t, (0+9)*10/2, tree.Range(0, 9))
-	assert.Equal(t, (10+99)*90/2, tree.Range(10, 99))
-	assert.Equal(t, (0+99)*100/2, tree.Range(0, 99))
+	for i := range N {
+		for j, sum := i, 0; j < N; j++ {
+			sum += j
+			assert.Equal(t, sum, st.Range(i, j), "i: %d, j: %d", i, j)
+		}
+	}
+}
+
+func TestSegmentTree_UpdateRange(t *testing.T) {
+	const N = 10
+	nums := make([]int, N)
+	st := NewSumSegmentTree(N)
+
+	for i := range N {
+		nums[i] = i
+		st.Update(i, i)
+	}
+
+	check := func() {
+		for i := range N {
+			for j, sum := i, 0; j < N; j++ {
+				sum += nums[j]
+				assert.Equal(t, sum, st.Range(i, j), "i: %d, j: %d, nums: %v", i, j, nums[i:j+1])
+			}
+		}
+	}
+
+	check()
+
+	update := make([][]int, 0)
+	for i := range N {
+		for j := i; j < N; j++ {
+			update = append(update, []int{i, j, rand.Intn(100) - 50})
+		}
+	}
+
+	for _, ints := range update {
+		for i := ints[0]; i <= ints[1]; i++ {
+			nums[i] += ints[2]
+		}
+		st.UpdateRange(ints[0], ints[1], ints[2])
+		check()
+	}
 }
 
 func TestSegmentTree_Max(t *testing.T) {
 	nums := []int{3, -1, 2, 5, 4}
-	tree := NewSegmentTree(
-		len(nums),
-		math.MinInt32,
-		func(node *int, val int) { *node = val },
-		func(l int, r int) int { return max(l, r) },
-	)
+	st := NewMaxSegmentTree(len(nums))
 
 	for i, num := range nums {
-		tree.Update(i, num)
+		st.Update(i, num)
 	}
 
-	assert.Equal(t, 3, tree.Range(0, 2))
-	assert.Equal(t, -1, tree.Range(1, 1))
-	assert.Equal(t, 2, tree.Range(1, 2))
-	assert.Equal(t, 5, tree.Range(0, 4))
-	assert.Equal(t, 5, tree.Range(3, 4))
-}
-
-func TestSegmentTree_Set(t *testing.T) {
-	nums := []int{3, -1, 2, 5, 4}
-	tree := NewSegmentTree(
-		len(nums),
-		math.MinInt32,
-		func(node *int, val int) { *node = max(*node, val) },
-		func(l int, r int) int { return max(l, r) },
-	)
-
-	for i, num := range nums {
-		tree.Update(i, num)
+	check := func() {
+		for i := range len(nums) {
+			for j, mx := i, nums[i]; j < len(nums); j++ {
+				mx = max(mx, nums[j])
+				assert.Equal(t, mx, st.Range(i, j), "i: %d, j: %d, nums: %v", i, j, nums[i:j+1])
+			}
+		}
 	}
 
-	assert.Equal(t, 5, tree.Range(0, 4))
-	tree.Update(3, 3)
-	assert.Equal(t, 5, tree.Range(0, 4))
-	tree.Update(3, 6)
-	assert.Equal(t, 6, tree.Range(0, 4))
+	check()
+
+	st.Update(3, 3)
+	nums[3] = max(nums[3], 3)
+	check()
+	st.Update(3, 6)
+	nums[3] = max(nums[3], 6)
+	check()
 }

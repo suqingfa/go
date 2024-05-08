@@ -25,3 +25,9 @@
 # 反射
 
 # 低级编程
+
+# go汇编
+
+````shell
+go tool compile -S main.go
+````

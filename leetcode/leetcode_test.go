@@ -144,7 +144,7 @@ func loadResult(filename string, valueOfFn reflect.Value) ([]reflect.Value, erro
 	return result, nil
 }
 
-func TestTable(t *testing.T) {
+func TestFn(t *testing.T) {
 	if fn == nil {
 		return
 	}
@@ -177,5 +177,3 @@ func TestTable(t *testing.T) {
 		assert.Equal(t, result[i].Interface(), values[0].Interface())
 	}
 }
-
-var fn any = nil

@@ -38,6 +38,10 @@ func createByType(tp reflect.Type, text string) any {
 		value := 0.0
 		_, _ = fmt.Sscan(text, &value)
 		return value
+	case reflect.Bool:
+		value := true
+		_, _ = fmt.Sscan(text, &value)
+		return value
 	case reflect.Slice:
 		switch tp.Elem().Kind() {
 		case reflect.String:
@@ -56,6 +60,10 @@ func createByType(tp reflect.Type, text string) any {
 			value := make([]float64, 0)
 			_ = json.Unmarshal([]byte(text), &value)
 			return value
+		case reflect.Bool:
+			value := make([]bool, 0)
+			_ = json.Unmarshal([]byte(text), &value)
+			return value
 		case reflect.Slice:
 			switch tp.Elem().Elem().Kind() {
 			case reflect.String:
@@ -72,6 +80,10 @@ func createByType(tp reflect.Type, text string) any {
 				return value
 			case reflect.Float64:
 				value := make([][]float64, 0)
+				_ = json.Unmarshal([]byte(text), &value)
+				return value
+			case reflect.Bool:
+				value := make([][]bool, 0)
 				_ = json.Unmarshal([]byte(text), &value)
 				return value
 			default:

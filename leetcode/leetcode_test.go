@@ -3,6 +3,7 @@ package leetcode
 import (
 	"bufio"
 	"encoding/json"
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"reflect"
@@ -21,36 +22,58 @@ func loadMethodInfo(valueOfFn reflect.Value) ([]reflect.Type, reflect.Type) {
 	return argsType, retType
 }
 
-func createByType(tp reflect.Type) any {
+func createByType(tp reflect.Type, text string) any {
 	switch tp.Kind() {
 	case reflect.String:
-		return ""
+		return text[1 : len(text)-1]
 	case reflect.Int:
-		return 0
+		value := 0
+		_, _ = fmt.Sscan(text, &value)
+		return value
 	case reflect.Int64:
-		return int64(0)
+		value := int64(0)
+		_, _ = fmt.Sscan(text, &value)
+		return value
 	case reflect.Float64:
-		return 0.0
+		value := 0.0
+		_, _ = fmt.Sscan(text, &value)
+		return value
 	case reflect.Slice:
 		switch tp.Elem().Kind() {
 		case reflect.String:
-			return make([]string, 0)
+			value := make([]string, 0)
+			_ = json.Unmarshal([]byte(text), &value)
+			return value
 		case reflect.Int:
-			return make([]int, 0)
+			value := make([]int, 0)
+			_ = json.Unmarshal([]byte(text), &value)
+			return value
 		case reflect.Int64:
-			return make([]int64, 0)
+			value := make([]int64, 0)
+			_ = json.Unmarshal([]byte(text), &value)
+			return value
 		case reflect.Float64:
-			return make([]float64, 0)
+			value := make([]float64, 0)
+			_ = json.Unmarshal([]byte(text), &value)
+			return value
 		case reflect.Slice:
 			switch tp.Elem().Elem().Kind() {
 			case reflect.String:
-				return make([][]string, 0)
+				value := make([][]string, 0)
+				_ = json.Unmarshal([]byte(text), &value)
+				return value
 			case reflect.Int:
-				return make([][]int, 0)
+				value := make([][]int, 0)
+				_ = json.Unmarshal([]byte(text), &value)
+				return value
 			case reflect.Int64:
-				return make([][]int64, 0)
+				value := make([][]int64, 0)
+				_ = json.Unmarshal([]byte(text), &value)
+				return value
 			case reflect.Float64:
-				return make([][]float64, 0)
+				value := make([][]float64, 0)
+				_ = json.Unmarshal([]byte(text), &value)
+				return value
 			default:
 				panic("unhandled default case")
 			}
@@ -72,23 +95,16 @@ func loadData(filename string, valueOfFn reflect.Value) ([][]reflect.Value, erro
 
 	argsType, _ := loadMethodInfo(valueOfFn)
 
-	arg := make([]any, len(argsType))
-	for i, argType := range argsType {
-		arg[i] = createByType(argType)
-	}
-
 	scanner := bufio.NewScanner(data)
 	for {
+		arg := make([]any, len(argsType))
+
 		for i := range arg {
 			if !scanner.Scan() {
 				return args, nil
 			}
 
-			text := scanner.Text()
-			err := json.Unmarshal([]byte(text), &arg[i])
-			if err != nil {
-				return nil, err
-			}
+			arg[i] = createByType(argsType[i], scanner.Text())
 		}
 
 		argValue := make([]reflect.Value, len(arg))
@@ -107,16 +123,10 @@ func loadResult(filename string, valueOfFn reflect.Value) ([]reflect.Value, erro
 	result := make([]reflect.Value, 0)
 
 	_, resultType := loadMethodInfo(valueOfFn)
-	value := createByType(resultType)
 
 	scanner := bufio.NewScanner(data)
 	for scanner.Scan() {
-		text := scanner.Text()
-		err := json.Unmarshal([]byte(text), &value)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, reflect.ValueOf(value))
+		result = append(result, reflect.ValueOf(createByType(resultType, scanner.Text())))
 	}
 
 	return result, nil

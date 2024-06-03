@@ -3,7 +3,6 @@ package leetcode
 import (
 	"bufio"
 	"encoding/json"
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"reflect"
@@ -22,6 +21,47 @@ func loadMethodInfo(valueOfFn reflect.Value) ([]reflect.Type, reflect.Type) {
 	return argsType, retType
 }
 
+func createByType(tp reflect.Type) any {
+	switch tp.Kind() {
+	case reflect.String:
+		return ""
+	case reflect.Int:
+		return 0
+	case reflect.Int64:
+		return int64(0)
+	case reflect.Float64:
+		return 0.0
+	case reflect.Slice:
+		switch tp.Elem().Kind() {
+		case reflect.String:
+			return make([]string, 0)
+		case reflect.Int:
+			return make([]int, 0)
+		case reflect.Int64:
+			return make([]int64, 0)
+		case reflect.Float64:
+			return make([]float64, 0)
+		case reflect.Slice:
+			switch tp.Elem().Elem().Kind() {
+			case reflect.String:
+				return make([][]string, 0)
+			case reflect.Int:
+				return make([][]int, 0)
+			case reflect.Int64:
+				return make([][]int64, 0)
+			case reflect.Float64:
+				return make([][]float64, 0)
+			default:
+				panic("unhandled default case")
+			}
+		default:
+			panic("unhandled default case")
+		}
+	default:
+		panic("unhandled default case")
+	}
+}
+
 // load data
 func loadData(filename string, valueOfFn reflect.Value) ([][]reflect.Value, error) {
 	data, err := os.Open(filename)
@@ -32,65 +72,30 @@ func loadData(filename string, valueOfFn reflect.Value) ([][]reflect.Value, erro
 
 	argsType, _ := loadMethodInfo(valueOfFn)
 
+	arg := make([]any, len(argsType))
+	for i, argType := range argsType {
+		arg[i] = createByType(argType)
+	}
+
 	scanner := bufio.NewScanner(data)
 	for {
-		arg := make([]reflect.Value, len(argsType))
-		for i, argType := range argsType {
+		for i := range arg {
 			if !scanner.Scan() {
 				return args, nil
 			}
 
 			text := scanner.Text()
-			var value any
-			switch argType.Kind() {
-			case reflect.String:
-				value = text[1 : len(text)-1]
-			case reflect.Int:
-				t := 0
-				_, err := fmt.Sscan(text, &t)
-				if err != nil {
-					return nil, err
-				}
-				value = t
-			case reflect.Float64:
-				t := 0.0
-				_, err := fmt.Sscan(text, &t)
-				if err != nil {
-					return nil, err
-				}
-				value = t
-			case reflect.Slice:
-				switch argType.Elem().Kind() {
-				case reflect.String:
-					value = make([]string, 0)
-				case reflect.Int:
-					value = make([]int, 0)
-				case reflect.Float64:
-					value = make([]float64, 0)
-				case reflect.Slice:
-					switch argType.Elem().Elem().Kind() {
-					case reflect.String:
-						value = make([][]string, 0)
-					case reflect.Int:
-						value = make([][]int, 0)
-					case reflect.Float64:
-						value = make([][]float64, 0)
-					default:
-						panic("unhandled default case")
-					}
-				default:
-					panic("unhandled default case")
-				}
-				err := json.Unmarshal([]byte(text), &value)
-				if err != nil {
-					return nil, err
-				}
-			default:
-				panic("unhandled default case")
+			err := json.Unmarshal([]byte(text), &arg[i])
+			if err != nil {
+				return nil, err
 			}
-			arg[i] = reflect.ValueOf(value)
 		}
-		args = append(args, arg)
+
+		argValue := make([]reflect.Value, len(arg))
+		for i, a := range arg {
+			argValue[i] = reflect.ValueOf(a)
+		}
+		args = append(args, argValue)
 	}
 }
 
@@ -102,32 +107,15 @@ func loadResult(filename string, valueOfFn reflect.Value) ([]reflect.Value, erro
 	result := make([]reflect.Value, 0)
 
 	_, resultType := loadMethodInfo(valueOfFn)
+	value := createByType(resultType)
 
 	scanner := bufio.NewScanner(data)
 	for scanner.Scan() {
 		text := scanner.Text()
-		var value any
-		switch resultType.Kind() {
-		case reflect.String:
-			value = text[1 : len(text)-1]
-		case reflect.Int:
-			t := 0
-			_, err := fmt.Sscan(text, &t)
-			if err != nil {
-				return nil, err
-			}
-			value = t
-		case reflect.Float64:
-			t := 0.0
-			_, err := fmt.Sscan(text, &t)
-			if err != nil {
-				return nil, err
-			}
-			value = t
-		default:
-			panic("unhandled default case")
+		err := json.Unmarshal([]byte(text), &value)
+		if err != nil {
+			return nil, err
 		}
-
 		result = append(result, reflect.ValueOf(value))
 	}
 

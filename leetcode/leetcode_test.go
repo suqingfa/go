@@ -162,7 +162,7 @@ func TestTable(t *testing.T) {
 	for i, arg := range args {
 		values := valueOfFn.Call(arg)
 		assert.Equal(t, 1, len(values))
-		assert.True(t, result[i].Equal(values[0]))
+		assert.Equal(t, result[i].Interface(), values[0].Interface())
 	}
 }
 

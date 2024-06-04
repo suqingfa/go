@@ -6,26 +6,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@main
 
-      - uses: actions/setup-go@v4
+      - uses: actions/setup-go@main
         with:
           go-version: 'stable'
 
-      - name: Run coverage
+      - name: Run Tests
         run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
 
       - name: Print coverage
         run: go tool cover -func=coverage.txt
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Cache SonarCloud packages
-        uses: actions/cache@v3
+        uses: actions/cache@main
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar

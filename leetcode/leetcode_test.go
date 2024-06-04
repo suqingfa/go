@@ -172,8 +172,10 @@ func TestFn(t *testing.T) {
 
 	// run tests
 	for i, arg := range args {
-		values := valueOfFn.Call(arg)
-		assert.Equal(t, 1, len(values))
-		assert.Equal(t, result[i].Interface(), values[0].Interface())
+		t.Run("", func(t *testing.T) {
+			values := valueOfFn.Call(arg)
+			assert.Equal(t, 1, len(values))
+			assert.Equal(t, result[i].Interface(), values[0].Interface())
+		})
 	}
 }

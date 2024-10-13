@@ -15,8 +15,8 @@ jobs:
       - name: Compile proto files
         uses: oa/protoc-go-action@0.1.1
         with:
-          go-out: test/pb
-          grpc-out: test/pb
+          go-out: test
+          grpc-out: test
           proto-file-directory: test/pb
 
       - name: Run Tests

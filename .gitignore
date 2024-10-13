@@ -23,3 +23,6 @@
 
 ### codecov
 coverage.txt
+
+# protobuf
+*.pb.go

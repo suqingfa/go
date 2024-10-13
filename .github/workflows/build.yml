@@ -17,7 +17,7 @@ jobs:
         with:
           go-out: test/pb
           grpc-out: test/pb
-          proto-file-directory: proto
+          proto-file-directory: test/pb
 
       - name: Run Tests
         run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...

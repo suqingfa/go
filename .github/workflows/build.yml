@@ -13,7 +13,7 @@ jobs:
           go-version: 'stable'
 
       - name: Compile proto files
-        uses: oa/protoc-go-action@0.1.1
+        uses: oa/protoc-go-action@main
         with:
           go-out: test
           grpc-out: test

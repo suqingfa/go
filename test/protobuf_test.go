@@ -3,7 +3,7 @@ package test
 import (
 	"encoding/hex"
 	"example/test/pb"
-	"fmt"
+	"github.com/stretchr/testify/assert"
 	"google.golang.org/protobuf/proto"
 	"testing"
 )
@@ -15,17 +15,15 @@ func TestProtobuf(t *testing.T) {
 	}
 
 	bytes, err := proto.Marshal(&user)
-	if err != nil {
-		panic(err)
-	}
+	assert.Nil(t, err)
 
-	fmt.Println(hex.EncodeToString(bytes))
+	t.Log(hex.EncodeToString(bytes))
 
 	var u pb.User
 	err = proto.Unmarshal(bytes, &u)
-	if err != nil {
-		panic(err)
-	}
+	assert.Nil(t, err)
 
-	fmt.Println(u.GetId(), u.GetUsername(), u.GetPassword())
+	assert.Equal(t, user.GetId(), u.GetId())
+	assert.Equal(t, user.GetUsername(), u.GetUsername())
+	assert.Equal(t, user.GetPassword(), u.GetPassword())
 }

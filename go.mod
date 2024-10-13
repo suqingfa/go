@@ -6,7 +6,7 @@ require (
 	github.com/emirpasic/gods/v2 v2.0.0-alpha
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/stretchr/testify v1.9.0
-	google.golang.org/protobuf v1.34.2
+	google.golang.org/protobuf v1.35.1
 )
 
 require (

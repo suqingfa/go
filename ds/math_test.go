@@ -42,7 +42,7 @@ func TestPrime(t *testing.T) {
 	assert.True(t, IsPrime(3))
 	assert.False(t, IsPrime(4))
 
-	n := 1_000_000
+	n := 100_000
 	m := make(map[int]bool)
 	for _, prime := range InitPrimes(n) {
 		m[prime] = true

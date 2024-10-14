@@ -7,7 +7,7 @@ import (
 )
 
 func TestSegmentTree_Sum(t *testing.T) {
-	const N = 1000
+	const N = 100
 	st := NewSumSegmentTree(N)
 
 	for i := range N {

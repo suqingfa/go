@@ -22,69 +22,69 @@ func loadMethodInfo(valueOfFn reflect.Value) ([]reflect.Type, reflect.Type) {
 	return argsType, retType
 }
 
-func createByType(tp reflect.Type, text string) any {
+func createByType(tp reflect.Type, text []byte) any {
 	switch tp.Kind() {
 	case reflect.String:
 		return text[1 : len(text)-1]
 	case reflect.Int:
 		value := 0
-		_, _ = fmt.Sscan(text, &value)
+		_, _ = fmt.Sscan(string(text), &value)
 		return value
 	case reflect.Int64:
 		value := int64(0)
-		_, _ = fmt.Sscan(text, &value)
+		_, _ = fmt.Sscan(string(text), &value)
 		return value
 	case reflect.Float64:
 		value := 0.0
-		_, _ = fmt.Sscan(text, &value)
+		_, _ = fmt.Sscan(string(text), &value)
 		return value
 	case reflect.Bool:
 		value := true
-		_, _ = fmt.Sscan(text, &value)
+		_, _ = fmt.Sscan(string(text), &value)
 		return value
 	case reflect.Slice:
 		switch tp.Elem().Kind() {
 		case reflect.String:
 			value := make([]string, 0)
-			_ = json.Unmarshal([]byte(text), &value)
+			_ = json.Unmarshal(text, &value)
 			return value
 		case reflect.Int:
 			value := make([]int, 0)
-			_ = json.Unmarshal([]byte(text), &value)
+			_ = json.Unmarshal(text, &value)
 			return value
 		case reflect.Int64:
 			value := make([]int64, 0)
-			_ = json.Unmarshal([]byte(text), &value)
+			_ = json.Unmarshal(text, &value)
 			return value
 		case reflect.Float64:
 			value := make([]float64, 0)
-			_ = json.Unmarshal([]byte(text), &value)
+			_ = json.Unmarshal(text, &value)
 			return value
 		case reflect.Bool:
 			value := make([]bool, 0)
-			_ = json.Unmarshal([]byte(text), &value)
+			_ = json.Unmarshal(text, &value)
 			return value
 		case reflect.Slice:
 			switch tp.Elem().Elem().Kind() {
 			case reflect.String:
 				value := make([][]string, 0)
-				_ = json.Unmarshal([]byte(text), &value)
+				_ = json.Unmarshal(text, &value)
 				return value
 			case reflect.Int:
 				value := make([][]int, 0)
-				_ = json.Unmarshal([]byte(text), &value)
+				_ = json.Unmarshal(text, &value)
 				return value
 			case reflect.Int64:
 				value := make([][]int64, 0)
-				_ = json.Unmarshal([]byte(text), &value)
+				_ = json.Unmarshal(text, &value)
 				return value
 			case reflect.Float64:
 				value := make([][]float64, 0)
-				_ = json.Unmarshal([]byte(text), &value)
+				_ = json.Unmarshal(text, &value)
 				return value
 			case reflect.Bool:
 				value := make([][]bool, 0)
-				_ = json.Unmarshal([]byte(text), &value)
+				_ = json.Unmarshal(text, &value)
 				return value
 			default:
 				panic("unhandled default case")
@@ -108,6 +108,8 @@ func loadData(filename string, valueOfFn reflect.Value) ([][]reflect.Value, erro
 	argsType, _ := loadMethodInfo(valueOfFn)
 
 	scanner := bufio.NewScanner(data)
+	buffer := make([]byte, 1024*1024*100)
+	scanner.Buffer(buffer, len(buffer))
 	for {
 		arg := make([]any, len(argsType))
 
@@ -116,7 +118,7 @@ func loadData(filename string, valueOfFn reflect.Value) ([][]reflect.Value, erro
 				return args, nil
 			}
 
-			arg[i] = createByType(argsType[i], scanner.Text())
+			arg[i] = createByType(argsType[i], scanner.Bytes())
 		}
 
 		argValue := make([]reflect.Value, len(arg))
@@ -138,7 +140,7 @@ func loadResult(filename string, valueOfFn reflect.Value) ([]reflect.Value, erro
 
 	scanner := bufio.NewScanner(data)
 	for scanner.Scan() {
-		result = append(result, reflect.ValueOf(createByType(resultType, scanner.Text())))
+		result = append(result, reflect.ValueOf(createByType(resultType, scanner.Bytes())))
 	}
 
 	return result, nil

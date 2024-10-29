@@ -25,7 +25,7 @@ func loadMethodInfo(valueOfFn reflect.Value) ([]reflect.Type, reflect.Type) {
 func createByType(tp reflect.Type, text []byte) any {
 	switch tp.Kind() {
 	case reflect.String:
-		return text[1 : len(text)-1]
+		return string(text[1 : len(text)-1])
 	case reflect.Int:
 		value := 0
 		_, _ = fmt.Sscan(string(text), &value)
@@ -87,13 +87,13 @@ func createByType(tp reflect.Type, text []byte) any {
 				_ = json.Unmarshal(text, &value)
 				return value
 			default:
-				panic("unhandled default case")
+				panic("unhandled default case" + tp.String())
 			}
 		default:
-			panic("unhandled default case")
+			panic("unhandled default case" + tp.String())
 		}
 	default:
-		panic("unhandled default case")
+		panic("unhandled default case" + tp.String())
 	}
 }
 

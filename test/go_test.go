@@ -69,9 +69,3 @@ func TestTimeParse(t *testing.T) {
 	assert.Nil(t, err)
 	t.Log(parse)
 }
-
-func BenchmarkToString(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		utils.ToString([]string{"hello", "world"})
-	}
-}

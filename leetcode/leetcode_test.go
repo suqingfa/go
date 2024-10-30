@@ -3,7 +3,6 @@ package leetcode
 import (
 	"bufio"
 	"encoding/json"
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"reflect"
@@ -25,22 +24,24 @@ func loadMethodInfo(valueOfFn reflect.Value) ([]reflect.Type, reflect.Type) {
 func createByType(tp reflect.Type, text []byte) any {
 	switch tp.Kind() {
 	case reflect.String:
-		return string(text[1 : len(text)-1])
+		value := ""
+		_ = json.Unmarshal(text, &value)
+		return value
 	case reflect.Int:
 		value := 0
-		_, _ = fmt.Sscan(string(text), &value)
+		_ = json.Unmarshal(text, &value)
 		return value
 	case reflect.Int64:
 		value := int64(0)
-		_, _ = fmt.Sscan(string(text), &value)
+		_ = json.Unmarshal(text, &value)
 		return value
 	case reflect.Float64:
 		value := 0.0
-		_, _ = fmt.Sscan(string(text), &value)
+		_ = json.Unmarshal(text, &value)
 		return value
 	case reflect.Bool:
-		value := true
-		_, _ = fmt.Sscan(string(text), &value)
+		value := false
+		_ = json.Unmarshal(text, &value)
 		return value
 	case reflect.Slice:
 		switch tp.Elem().Kind() {
@@ -87,13 +88,47 @@ func createByType(tp reflect.Type, text []byte) any {
 				_ = json.Unmarshal(text, &value)
 				return value
 			default:
-				panic("unhandled default case" + tp.String())
+				panic("unhandled default case " + tp.String())
 			}
 		default:
-			panic("unhandled default case" + tp.String())
+			panic("unhandled default case " + tp.String())
 		}
 	default:
-		panic("unhandled default case" + tp.String())
+		panic("unhandled default case " + tp.String())
+	}
+}
+
+func TestCreateByType(t *testing.T) {
+	tests := []struct {
+		name   string
+		tp     reflect.Type
+		text   string
+		result any
+	}{
+		{"", reflect.TypeFor[string](), `"abc"`, "abc"},
+		{"", reflect.TypeFor[int](), `123`, 123},
+		{"", reflect.TypeFor[int64](), `123`, int64(123)},
+		{"", reflect.TypeFor[float64](), `123.4`, 123.4},
+		{"", reflect.TypeFor[bool](), `true`, true},
+		{"", reflect.TypeFor[bool](), `false`, false},
+
+		{"", reflect.TypeFor[[]string](), `["abc","bcd"]`, []string{"abc", "bcd"}},
+		{"", reflect.TypeFor[[]int](), `[123,234]`, []int{123, 234}},
+		{"", reflect.TypeFor[[]int64](), `[123,234]`, []int64{int64(123), int64(234)}},
+		{"", reflect.TypeFor[[]float64](), `[123.4,234.5]`, []float64{123.4, 234.5}},
+		{"", reflect.TypeFor[[]bool](), `[true,false]`, []bool{true, false}},
+
+		{"", reflect.TypeFor[[][]string](), `[["abc","bcd"]]`, [][]string{{"abc", "bcd"}}},
+		{"", reflect.TypeFor[[][]int](), `[[123,234]]`, [][]int{{123, 234}}},
+		{"", reflect.TypeFor[[][]int64](), `[[123,234]]`, [][]int64{{int64(123), int64(234)}}},
+		{"", reflect.TypeFor[[][]float64](), `[[123.4,234.5]]`, [][]float64{{123.4, 234.5}}},
+		{"", reflect.TypeFor[[][]bool](), `[[true,false]]`, [][]bool{{true, false}}},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			assert.Equal(t, test.result, createByType(test.tp, []byte(test.text)))
+		})
 	}
 }
 

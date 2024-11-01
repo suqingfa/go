@@ -21,72 +21,72 @@ func loadMethodInfo(valueOfFn reflect.Value) ([]reflect.Type, reflect.Type) {
 	return argsType, retType
 }
 
-func createByType(tp reflect.Type, text []byte) any {
+func createByType(tp reflect.Type, text []byte) (any, error) {
 	switch tp.Kind() {
 	case reflect.String:
 		value := ""
-		_ = json.Unmarshal(text, &value)
-		return value
+		err := json.Unmarshal(text, &value)
+		return value, err
 	case reflect.Int:
 		value := 0
-		_ = json.Unmarshal(text, &value)
-		return value
+		err := json.Unmarshal(text, &value)
+		return value, err
 	case reflect.Int64:
 		value := int64(0)
-		_ = json.Unmarshal(text, &value)
-		return value
+		err := json.Unmarshal(text, &value)
+		return value, err
 	case reflect.Float64:
 		value := 0.0
-		_ = json.Unmarshal(text, &value)
-		return value
+		err := json.Unmarshal(text, &value)
+		return value, err
 	case reflect.Bool:
 		value := false
-		_ = json.Unmarshal(text, &value)
-		return value
+		err := json.Unmarshal(text, &value)
+		return value, err
 	case reflect.Slice:
 		switch tp.Elem().Kind() {
 		case reflect.String:
 			value := make([]string, 0)
-			_ = json.Unmarshal(text, &value)
-			return value
+			err := json.Unmarshal(text, &value)
+			return value, err
 		case reflect.Int:
 			value := make([]int, 0)
-			_ = json.Unmarshal(text, &value)
-			return value
+			err := json.Unmarshal(text, &value)
+			return value, err
 		case reflect.Int64:
 			value := make([]int64, 0)
-			_ = json.Unmarshal(text, &value)
-			return value
+			err := json.Unmarshal(text, &value)
+			return value, err
 		case reflect.Float64:
 			value := make([]float64, 0)
-			_ = json.Unmarshal(text, &value)
-			return value
+			err := json.Unmarshal(text, &value)
+			return value, err
 		case reflect.Bool:
 			value := make([]bool, 0)
-			_ = json.Unmarshal(text, &value)
-			return value
+			err := json.Unmarshal(text, &value)
+			return value, err
 		case reflect.Slice:
 			switch tp.Elem().Elem().Kind() {
 			case reflect.String:
 				value := make([][]string, 0)
-				_ = json.Unmarshal(text, &value)
-				return value
+				err := json.Unmarshal(text, &value)
+				return value, err
 			case reflect.Int:
 				value := make([][]int, 0)
-				_ = json.Unmarshal(text, &value)
-				return value
+				err := json.Unmarshal(text, &value)
+				return value, err
 			case reflect.Int64:
 				value := make([][]int64, 0)
-				_ = json.Unmarshal(text, &value)
-				return value
+				err := json.Unmarshal(text, &value)
+				return value, err
 			case reflect.Float64:
 				value := make([][]float64, 0)
-				_ = json.Unmarshal(text, &value)
-				return value
+				err := json.Unmarshal(text, &value)
+				return value, err
 			case reflect.Bool:
 				value := make([][]bool, 0)
-				_ = json.Unmarshal(text, &value)
-				return value
+				err := json.Unmarshal(text, &value)
+				return value, err
 			default:
 				panic("unhandled default case " + tp.String())
 			}
@@ -127,7 +127,9 @@ func TestCreateByType(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			assert.Equal(t, test.result, createByType(test.tp, []byte(test.text)))
+			value, err := createByType(test.tp, []byte(test.text))
+			assert.NoError(t, err)
+			assert.Equal(t, test.result, value)
 		})
 	}
 }
@@ -153,7 +155,11 @@ func loadData(filename string, valueOfFn reflect.Value) ([][]reflect.Value, erro
 				return args, nil
 			}
 
-			arg[i] = createByType(argsType[i], scanner.Bytes())
+			value, err := createByType(argsType[i], scanner.Bytes())
+			if err != nil {
+				return nil, err
+			}
+			arg[i] = value
 		}
 
 		argValue := make([]reflect.Value, len(arg))
@@ -175,7 +181,11 @@ func loadResult(filename string, valueOfFn reflect.Value) ([]reflect.Value, erro
 
 	scanner := bufio.NewScanner(data)
 	for scanner.Scan() {
-		result = append(result, reflect.ValueOf(createByType(resultType, scanner.Bytes())))
+		value, err := createByType(resultType, scanner.Bytes())
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, reflect.ValueOf(value))
 	}
 
 	return result, nil
@@ -191,15 +201,15 @@ func TestFn(t *testing.T) {
 	assert.Equal(t, reflect.Func, valueOfFn.Kind())
 
 	args, err := loadData("data.txt", valueOfFn)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	result, err := loadResult("result.txt", valueOfFn)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, len(args), len(result))
 
 	// start cpu profile
 	file, _ := os.CreateTemp("", "cpu.prof")
-	println("cpu.prof:", file.Name())
+	t.Log("cpu profile:", file.Name())
 	defer func(file *os.File) {
 		_ = file.Close()
 	}(file)

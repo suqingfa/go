@@ -3,6 +3,7 @@ package ds
 import (
 	"cmp"
 	"slices"
+	"strconv"
 )
 
 func Gcd(a, b int) int {
@@ -43,6 +44,39 @@ func Abs[T int | int64 | byte | rune | float64](n T) T {
 	}
 
 	return n
+}
+
+// PalindromeNumber 回文数字序列
+func PalindromeNumber(yield func(int) bool) {
+	for i := range 9 {
+		if !yield(i + 1) {
+			return
+		}
+	}
+
+	for start := 1; ; start *= 10 {
+		for prefix := start; prefix < 10*start; prefix++ {
+			itoa := strconv.Itoa(prefix)
+			bytes := []byte(itoa)
+			slices.Reverse(bytes)
+			atoi, _ := strconv.Atoi(itoa + string(bytes))
+			if !yield(atoi) {
+				return
+			}
+		}
+
+		for prefix := start; prefix < 10*start; prefix++ {
+			itoa := strconv.Itoa(prefix)
+			bytes := []byte(itoa)
+			slices.Reverse(bytes)
+			for mid := 0; mid < 10; mid++ {
+				atoi, _ := strconv.Atoi(itoa + strconv.Itoa(mid) + string(bytes))
+				if !yield(atoi) {
+					return
+				}
+			}
+		}
+	}
 }
 
 func Factorization(n int) map[int]int {

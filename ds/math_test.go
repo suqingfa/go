@@ -2,6 +2,8 @@ package ds
 
 import (
 	"github.com/stretchr/testify/assert"
+	"slices"
+	"strconv"
 	"testing"
 )
 
@@ -26,6 +28,24 @@ func TestSumAbs(t *testing.T) {
 	assert.Equal(t, 10, Sum(1, 2, 3, 4))
 	assert.Equal(t, 1, Abs(1))
 	assert.Equal(t, 1, Abs(-1))
+}
+
+func TestPalindromeNumber(t *testing.T) {
+	expected := 0
+	for i := range PalindromeNumber {
+		if i > 1e6 {
+			break
+		}
+		for expected++; ; expected++ {
+			itoa := strconv.Itoa(expected)
+			bytes := []byte(itoa)
+			slices.Reverse(bytes)
+			if itoa == string(bytes) {
+				assert.Equal(t, expected, i)
+				break
+			}
+		}
+	}
 }
 
 func TestFactorization(t *testing.T) {

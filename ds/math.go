@@ -17,8 +17,6 @@ func Gcd(a, b int) int {
 func ModPower(base, n, mod int) int {
 	if n == 0 {
 		return 1
-	} else if n == 1 {
-		return base % mod
 	}
 
 	res := ModPower(base, n/2, mod)

@@ -30,9 +30,9 @@ func TestSumAbs(t *testing.T) {
 	assert.Equal(t, 1, Abs(-1))
 }
 
-func TestPalindromeNumber(t *testing.T) {
+func TestSymmetricNumberSeq(t *testing.T) {
 	expected := 0
-	for i := range Palindrome {
+	for i := range SymmetricNumberSeq {
 		if i > 1e6 {
 			break
 		}

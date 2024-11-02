@@ -44,8 +44,8 @@ func Abs[T int | int64 | byte | rune | float64](n T) T {
 	return n
 }
 
-// Palindrome 回文数字序列
-func Palindrome(yield func(int) bool) {
+// SymmetricNumberSeq 回文数字序列
+func SymmetricNumberSeq(yield func(int) bool) {
 	for i := range 9 {
 		if !yield(i + 1) {
 			return

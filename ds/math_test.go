@@ -32,7 +32,7 @@ func TestSumAbs(t *testing.T) {
 
 func TestPalindromeNumber(t *testing.T) {
 	expected := 0
-	for i := range PalindromeNumber {
+	for i := range Palindrome {
 		if i > 1e6 {
 			break
 		}

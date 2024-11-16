@@ -15,42 +15,45 @@ func TestSqlDrivers(t *testing.T) {
 
 func TestSql(t *testing.T) {
 	db, err := sql.Open("sqlite3", "file::memory:?cache=shared")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	defer db.Close()
 
 	rows, err := db.Query("select sqlite_version()")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
+	defer rows.Close()
 
 	for rows.Next() {
 		var version string
 		err = rows.Scan(&version)
-		assert.Nil(t, err)
+		assert.NoError(t, err)
 		t.Log("sql version:", version)
 	}
 
 	_, err = db.Exec("create table user(id int primary key, name varchar(255), password varchar(255))")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	tx, err := db.Begin()
+	assert.NoError(t, err)
 	defer func() {
-		if recover() != nil {
+		if err := recover(); err != nil {
 			_ = tx.Rollback()
+			panic(err)
 		} else {
 			_ = tx.Commit()
 		}
 	}()
 
-	assert.Nil(t, err)
 	stmt, err := db.Prepare("insert into user(id, name, password) values ($1, $2, $3)")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	_, err = stmt.Exec(0, "user", "password")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	_, err = stmt.Exec(1, "admin", "password")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	query, err := db.Query("select id, name, password from user")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
+	defer query.Close()
 
 	columns, _ := query.Columns()
 	t.Log("query", "columns", columns)
@@ -60,7 +63,7 @@ func TestSql(t *testing.T) {
 		var name string
 		var password string
 		err = query.Scan(&id, &name, &password)
-		assert.Nil(t, err)
+		assert.NoError(t, err)
 		t.Log("query result", "id", id, "name", name, "password", password)
 	}
 }

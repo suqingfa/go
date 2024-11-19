@@ -180,6 +180,8 @@ func loadResult(filename string, valueOfFn reflect.Value) ([]reflect.Value, erro
 	_, resultType := loadMethodInfo(valueOfFn)
 
 	scanner := bufio.NewScanner(data)
+	buffer := make([]byte, 1024*1024*100)
+	scanner.Buffer(buffer, len(buffer))
 	for scanner.Scan() {
 		value, err := createByType(resultType, scanner.Bytes())
 		if err != nil {

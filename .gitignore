@@ -5,6 +5,7 @@
 
 ### Go template
 # Binaries for programs and plugins
+example
 *.exe
 *.exe~
 *.dll

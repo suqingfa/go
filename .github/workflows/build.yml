@@ -12,13 +12,6 @@ jobs:
         with:
           go-version: 'stable'
 
-      - name: Compile proto files
-        uses: oa/protoc-go-action@main
-        with:
-          go-out: test
-          grpc-out: test
-          proto-file-directory: test/pb
-
       - name: Run Tests
         run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
 

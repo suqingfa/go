@@ -23,7 +23,7 @@ func (t *Trie) Insert(word string) {
 	cur.isLeaf = true
 }
 
-func (t *Trie) find(word string, findWithPrefix bool) bool {
+func (t *Trie) search(word string, findWithPrefix bool) bool {
 	next, ok := t, false
 	for _, r := range word {
 		next, ok = next.children[r]
@@ -39,11 +39,11 @@ func (t *Trie) find(word string, findWithPrefix bool) bool {
 	return next.isLeaf
 }
 
-func (t *Trie) Find(word string) bool {
-	return t.find(word, false)
+func (t *Trie) Search(word string) bool {
+	return t.search(word, false)
 }
 
-// HasPrefixString 字典树中是否存在以 prefix 为前缀的词
-func (t *Trie) HasPrefixString(prefix string) bool {
-	return t.find(prefix, true)
+// StartWith 字典树中是否存在以 prefix 为前缀的词
+func (t *Trie) StartWith(prefix string) bool {
+	return t.search(prefix, true)
 }

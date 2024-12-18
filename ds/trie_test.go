@@ -23,7 +23,7 @@ func TestTrie(t *testing.T) {
 	}
 
 	for s, b := range findExcept {
-		assert.Equal(t, b, trie.Find(s))
+		assert.Equal(t, b, trie.Search(s))
 	}
 
 	prefixExcept := map[string]bool{
@@ -36,6 +36,6 @@ func TestTrie(t *testing.T) {
 	}
 
 	for s, b := range prefixExcept {
-		assert.Equal(t, b, trie.HasPrefixString(s))
+		assert.Equal(t, b, trie.StartWith(s))
 	}
 }

@@ -115,7 +115,7 @@ func InitPrimes(n int) []int {
 
 	for i := 2; i*i <= n; i++ {
 		if m[i] {
-			for j := 2 * i; j <= n; j += i {
+			for j := i * i; j <= n; j += i {
 				m[j] = false
 			}
 		}

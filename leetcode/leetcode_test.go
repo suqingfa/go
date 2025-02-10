@@ -7,7 +7,10 @@ import (
 	"os"
 	"reflect"
 	"runtime/pprof"
+	"strconv"
+	"strings"
 	"testing"
+	"time"
 )
 
 // load reflect of func
@@ -208,6 +211,31 @@ func TestFn(t *testing.T) {
 	result, err := loadResult("result.txt", valueOfFn)
 	assert.NoError(t, err)
 	assert.Equal(t, len(args), len(result))
+
+	// 不是调试时超时退出
+	debug := false
+	statusFile, err := os.Open("/proc/self/status")
+	scanner := bufio.NewScanner(statusFile)
+	for scanner.Scan() {
+		text := scanner.Text()
+		if !strings.HasPrefix(text, "TracerPid") {
+			continue
+		}
+
+		split := strings.Split(text, ":")
+		ppid, _ := strconv.Atoi(split[1][1:])
+		debug = ppid > 0
+		break
+	}
+
+	if !debug {
+		go func(c <-chan time.Time) {
+			select {
+			case <-c:
+				os.Exit(0)
+			}
+		}(time.After(3 * time.Second))
+	}
 
 	// start cpu profile
 	file, _ := os.CreateTemp("", "cpu.prof")

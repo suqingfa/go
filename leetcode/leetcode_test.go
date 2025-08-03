@@ -3,7 +3,6 @@ package leetcode
 import (
 	"bufio"
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"os"
 	"reflect"
 	"runtime/pprof"
@@ -11,6 +10,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // load reflect of func
@@ -214,7 +215,7 @@ func TestFn(t *testing.T) {
 
 	// 不是调试时超时退出
 	debug := false
-	statusFile, err := os.Open("/proc/self/status")
+	statusFile, _ := os.Open("/proc/self/status")
 	scanner := bufio.NewScanner(statusFile)
 	for scanner.Scan() {
 		text := scanner.Text()
@@ -230,10 +231,8 @@ func TestFn(t *testing.T) {
 
 	if !debug {
 		go func(c <-chan time.Time) {
-			select {
-			case <-c:
-				os.Exit(0)
-			}
+			<-c
+			os.Exit(0)
 		}(time.After(3 * time.Second))
 	}
 

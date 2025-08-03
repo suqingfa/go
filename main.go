@@ -2,6 +2,7 @@ package main
 
 import "log/slog"
 
+// #nosec
 func add(a, b int) int
 
 func main() {

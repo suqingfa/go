@@ -6,6 +6,7 @@
 ### Go template
 # Binaries for programs and plugins
 example
+__debug_*
 *.exe
 *.exe~
 *.dll

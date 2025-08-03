@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "run TestFn",
+            "type": "go",
+            "request": "launch",
+            "mode": "test",
+            "program": "${workspaceFolder}/leetcode",
+            "args": [
+                "-test.run",
+                "^TestFn$"
+            ]
+        },
+        {
+            "name": "Run main",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}",
+            "env": {},
+            "args": [],
+            "console": "integratedTerminal",
+            "showLog": true
+        }
+    ]
+}

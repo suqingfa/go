@@ -14,8 +14,6 @@ jobs:
 
       - name: Run Gosec Security Scanner
         uses: securego/gosec@master
-        env:
-          GOFLAGS: '-buildvcs=false'
         with:
           args: ./...
 

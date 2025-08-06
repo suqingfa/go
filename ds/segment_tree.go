@@ -32,7 +32,7 @@ func NewMaxSegmentTree(n int) *SegmentTree {
 	return NewSegmentTree(
 		n,
 		math.MinInt,
-		func(node *int, val int) { *node = max(*node, val) },
+		func(node *int, val int) { *node = val },
 		func(l int, r int) int { return max(l, r) },
 	)
 }

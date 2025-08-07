@@ -1,10 +1,11 @@
 package test
 
 import (
-	"github.com/stretchr/testify/assert"
 	"runtime"
 	"testing"
 	"weak"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type T struct {

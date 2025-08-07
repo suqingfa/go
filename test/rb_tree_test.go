@@ -1,9 +1,10 @@
 package test
 
 import (
+	"testing"
+
 	"github.com/emirpasic/gods/v2/trees/redblacktree"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestRedBlackTree(t *testing.T) {

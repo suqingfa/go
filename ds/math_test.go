@@ -1,10 +1,11 @@
 package ds
 
 import (
-	"github.com/stretchr/testify/assert"
 	"slices"
 	"strconv"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGcd(t *testing.T) {

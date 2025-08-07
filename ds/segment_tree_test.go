@@ -1,9 +1,10 @@
 package ds
 
 import (
-	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSegmentTree_Sum(t *testing.T) {

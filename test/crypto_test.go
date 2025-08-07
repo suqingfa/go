@@ -10,9 +10,10 @@ import (
 	"encoding/hex"
 	"encoding/pem"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSHA(t *testing.T) {

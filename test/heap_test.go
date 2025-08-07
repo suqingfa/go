@@ -2,9 +2,10 @@ package test
 
 import (
 	"container/heap"
-	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type H []int

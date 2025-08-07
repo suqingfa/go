@@ -2,13 +2,14 @@ package test
 
 import (
 	"encoding/json"
+	"slices"
+	"testing"
+	"time"
+
 	"github.com/emirpasic/gods/v2/queues/linkedlistqueue"
 	"github.com/emirpasic/gods/v2/queues/priorityqueue"
 	"github.com/emirpasic/gods/v2/utils"
 	"github.com/stretchr/testify/assert"
-	"slices"
-	"testing"
-	"time"
 )
 
 func TestToString(t *testing.T) {

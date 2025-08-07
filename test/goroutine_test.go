@@ -1,11 +1,12 @@
 package test
 
 import (
-	"github.com/stretchr/testify/assert"
 	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 const N = 1e5

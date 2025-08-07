@@ -3,6 +3,7 @@ package leetcode
 import (
 	"bufio"
 	"encoding/json"
+	"math"
 	"os"
 	"reflect"
 	"runtime/pprof"
@@ -251,7 +252,11 @@ func TestFn(t *testing.T) {
 		t.Run("", func(t *testing.T) {
 			values := valueOfFn.Call(arg)
 			assert.Equal(t, 1, len(values))
-			assert.Equal(t, result[i].Interface(), values[0].Interface())
+			if values[0].Kind() != reflect.Float64 {
+				assert.Equal(t, result[i].Interface(), values[0].Interface())
+			} else if math.Abs(values[0].Float()-result[i].Float()) > 1e-5 {
+				assert.Equal(t, result[i].Interface(), values[0].Interface())
+			}
 		})
 	}
 }

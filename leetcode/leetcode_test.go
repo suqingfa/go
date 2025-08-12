@@ -247,14 +247,38 @@ func TestFn(t *testing.T) {
 	_ = pprof.StartCPUProfile(file)
 	defer pprof.StopCPUProfile()
 
+	var equal func(a, b reflect.Value) bool
+	equal = func(a, b reflect.Value) bool {
+		if a.Kind() != b.Kind() {
+			return false
+		}
+
+		switch a.Kind() {
+		case reflect.Float64:
+			return math.Abs(a.Float()-b.Float()) < 1e-5
+		case reflect.Array | reflect.Slice:
+			if a.Len() != b.Len() {
+				return false
+			}
+
+			for i := 0; i < a.Len(); i++ {
+				if !equal(a.Index(i), b.Index(i)) {
+					return false
+				}
+			}
+		default:
+			return a.Interface() == b.Interface()
+		}
+
+		return true
+	}
+
 	// run tests
 	for i, arg := range args {
 		t.Run("", func(t *testing.T) {
 			values := valueOfFn.Call(arg)
 			assert.Equal(t, 1, len(values))
-			if values[0].Kind() != reflect.Float64 {
-				assert.Equal(t, result[i].Interface(), values[0].Interface())
-			} else if math.Abs(values[0].Float()-result[i].Float()) > 1e-5 {
+			if !equal(result[i], values[0]) {
 				assert.Equal(t, result[i].Interface(), values[0].Interface())
 			}
 		})

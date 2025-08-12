@@ -79,10 +79,11 @@ func TestSegmentTree_Max(t *testing.T) {
 
 	check()
 
+	nums[3] = 3
 	st.Update(3, 3)
-	nums[3] = max(nums[3], 3)
 	check()
+
+	nums[3] = 6
 	st.Update(3, 6)
-	nums[3] = max(nums[3], 6)
 	check()
 }

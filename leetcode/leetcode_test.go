@@ -247,6 +247,7 @@ func TestFn(t *testing.T) {
 	_ = pprof.StartCPUProfile(file)
 	defer pprof.StopCPUProfile()
 
+	// equal test func
 	var equal func(a, b reflect.Value) bool
 	equal = func(a, b reflect.Value) bool {
 		if a.Kind() != b.Kind() {

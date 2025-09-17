@@ -230,13 +230,6 @@ func TestFn(t *testing.T) {
 		break
 	}
 
-	if !debug {
-		go func(c <-chan time.Time) {
-			<-c
-			os.Exit(0)
-		}(time.After(3 * time.Second))
-	}
-
 	// start cpu profile
 	file, _ := os.CreateTemp("", "cpu.prof")
 	t.Log("cpu profile:", file.Name())
@@ -246,6 +239,15 @@ func TestFn(t *testing.T) {
 
 	_ = pprof.StartCPUProfile(file)
 	defer pprof.StopCPUProfile()
+
+	if !debug {
+		go func(c <-chan time.Time) {
+			<-c
+			pprof.StopCPUProfile()
+			_ = file.Close()
+			os.Exit(0)
+		}(time.After(3 * time.Second))
+	}
 
 	// equal test func
 	var equal func(a, b reflect.Value) bool

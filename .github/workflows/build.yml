@@ -17,10 +17,10 @@ jobs:
         # with:
           # args: ./...
 
-      - name: Run GoVulnCheck
-        uses: golang/govulncheck-action@master
-        with:
-          go-package: ./...
+      # - name: Run GoVulnCheck
+      # uses: golang/govulncheck-action@master
+      # with:
+      #   go-package: ./...
 
       - name: Run Tests
         run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...

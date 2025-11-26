@@ -14,6 +14,15 @@ func TestGcd(t *testing.T) {
 	assert.Equal(t, 3, Gcd(6, 9))
 }
 
+func TestModInverse(t *testing.T) {
+	const M int = 0x10001
+	assert.True(t, IsPrime(M))
+
+	for i := 1; i < M; i++ {
+		assert.Equal(t, 1, i*ModInverse(i, M)%M)
+	}
+}
+
 func TestModPower(t *testing.T) {
 	const M = 1e9 + 7
 	assert.Equal(t, 1, ModPower(2, 0, M))

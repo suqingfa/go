@@ -14,6 +14,11 @@ func Gcd(a, b int) int {
 	return Gcd(b, a%b)
 }
 
+// ModInverse 当 m 是素数时, 求 ax mod m == 1 的解
+func ModInverse(a, m int) int {
+	return ModPower(a, m-2, m)
+}
+
 func ModPower(base, n, mod int) int {
 	if n == 0 {
 		return 1

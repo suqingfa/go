@@ -3,8 +3,8 @@ package ds
 import "math/rand"
 
 type Node struct {
-	left, right         *Node
-	key, size, priority int
+	left, right              *Node
+	key, cnt, size, priority int
 }
 
 type Treap struct {
@@ -20,7 +20,7 @@ func size(node *Node) int {
 
 func updateSize(node *Node) {
 	if node != nil {
-		node.size = 1 + size(node.left) + size(node.right)
+		node.size = node.cnt + size(node.left) + size(node.right)
 	}
 }
 
@@ -49,6 +49,7 @@ func insert(node *Node, key int) *Node {
 		return &Node{
 			key:      key,
 			priority: rand.Int(),
+			cnt:      1,
 			size:     1,
 		}
 	}
@@ -58,11 +59,14 @@ func insert(node *Node, key int) *Node {
 		if node.left.priority > node.priority {
 			node = rightRotate(node)
 		}
-	} else {
+	} else if key > node.key {
 		node.right = insert(node.right, key)
 		if node.right.priority > node.priority {
 			node = leftRotate(node)
 		}
+	} else {
+		node.size++
+		node.cnt++
 	}
 
 	updateSize(node)
@@ -80,7 +84,7 @@ func (t *Treap) Rank(key int) int {
 		if key < node.key {
 			node = node.left
 		} else if key > node.key {
-			rank += size(node.left) + 1
+			rank += size(node.left) + node.cnt
 			node = node.right
 		} else {
 			return rank + size(node.left) + 1

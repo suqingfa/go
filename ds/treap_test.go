@@ -12,17 +12,18 @@ func TestTreap(t *testing.T) {
 
 	list := make([]int, 100)
 	for i := range list {
-		list[i] = rand.Int()
-		treap.Insert(list[i])
-	}
+		list[i] = rand.Intn(10)
 
-	for _, v := range list {
 		cnt := 0
-		for _, num := range list {
-			if v >= num {
+		for _, num := range list[:i] {
+			if num < list[i] {
 				cnt++
 			}
 		}
-		assert.Equal(t, cnt, treap.Rank(v))
+
+		rank := treap.Rank(list[i])
+		assert.Equal(t, cnt+1, rank)
+
+		treap.Insert(list[i])
 	}
 }

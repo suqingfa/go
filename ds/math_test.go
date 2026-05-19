@@ -32,6 +32,11 @@ func TestModPower(t *testing.T) {
 	assert.Equal(t, 16, ModPower(2, 4, M))
 	assert.Equal(t, 32, ModPower(2, 5, M))
 	assert.Equal(t, 140625001, ModPower(2, 1e9, M))
+
+	// 计算 i 模逆元
+	for i := 1; i < 1e6; i++ {
+		assert.Equal(t, 1, (i*ModPower(i, M-2, M))%M)
+	}
 }
 
 func TestSumAbs(t *testing.T) {

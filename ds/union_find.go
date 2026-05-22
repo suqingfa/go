@@ -58,16 +58,18 @@ type unionFindUseArray struct {
 
 func (uf *unionFindUseArray) Find(t int) int {
 	res := uf.arr[t]
-	for res != uf.arr[res] {
-		res = uf.arr[res]
+	if res == uf.arr[res] {
+		return res
 	}
 
+	res = uf.Find(uf.arr[res])
 	uf.arr[t] = res
 
 	return res
 }
 
 func (uf *unionFindUseArray) Union(a, b int) bool {
+	a, b = min(a, b), max(a, b)
 	la, lb := uf.Find(a), uf.Find(b)
 	if la == lb {
 		return false

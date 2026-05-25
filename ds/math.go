@@ -7,11 +7,11 @@ import (
 )
 
 func Gcd(a, b int) int {
-	if b == 0 {
-		return a
+	for b != 0 {
+		a, b = b, a%b
 	}
 
-	return Gcd(b, a%b)
+	return a
 }
 
 // ModInverse 当 m 是素数时, 求 ax mod m == 1 的解

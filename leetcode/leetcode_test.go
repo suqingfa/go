@@ -27,6 +27,38 @@ func loadMethodInfo(valueOfFn reflect.Value) ([]reflect.Type, reflect.Type) {
 }
 
 func createByType(tp reflect.Type, text []byte) (any, error) {
+	if tp == reflect.PointerTo(reflect.TypeFor[TreeNode]()) {
+		var ints []*int
+		err := json.Unmarshal(text, &ints)
+		if err != nil {
+			return nil, err
+		}
+
+		if len(ints) == 0 {
+			return nil, nil
+		}
+
+		root := &TreeNode{Val: *ints[0]}
+
+		q := []*TreeNode{root}
+		for i := 1; len(q) > 0 && i < len(ints); i += 2 {
+			cur := q[0]
+			q = q[1:]
+
+			if ints[i] != nil {
+				cur.Left = &TreeNode{Val: *ints[i]}
+				q = append(q, cur.Left)
+			}
+
+			if ints[i+1] != nil {
+				cur.Right = &TreeNode{Val: *ints[i+1]}
+				q = append(q, cur.Right)
+			}
+		}
+
+		return root, nil
+	}
+
 	switch tp.Kind() {
 	case reflect.String:
 		value := ""

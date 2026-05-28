@@ -2,6 +2,7 @@ package ds
 
 import (
 	"cmp"
+	"iter"
 	"slices"
 	"strconv"
 )
@@ -152,6 +153,13 @@ func initCNK(n int) [][]int {
 	}
 
 	return c
+}
+
+func Subset(mask int) iter.Seq[int] {
+	return func(yield func(int) bool) {
+		for s := mask; yield(s) && s != 0; s = (s - 1) & mask {
+		}
+	}
 }
 
 func NextPermutation[S ~[]E, E cmp.Ordered](arr S) bool {

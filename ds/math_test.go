@@ -100,6 +100,24 @@ func TestCNK(t *testing.T) {
 	}, cnk)
 }
 
+func TestSubset(t *testing.T) {
+	m := make(map[int]bool)
+	for i := range Subset(0b1101) {
+		m[i] = true
+	}
+
+	assert.Equal(t, m, map[int]bool{
+		0b0000: true,
+		0b0001: true,
+		0b0100: true,
+		0b0101: true,
+		0b1000: true,
+		0b1001: true,
+		0b1100: true,
+		0b1101: true,
+	})
+}
+
 func TestNextPermutation(t *testing.T) {
 	source := []int{1, 2, 3}
 

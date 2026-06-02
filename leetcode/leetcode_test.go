@@ -26,6 +26,38 @@ func loadMethodInfo(valueOfFn reflect.Value) ([]reflect.Type, reflect.Type) {
 	return argsType, retType
 }
 
+func createByTypeValue(tp reflect.Type, v any) any {
+	value := reflect.New(tp)
+	switch tp.Kind() {
+	case reflect.Bool:
+		value.Elem().SetBool(v.(bool))
+	case reflect.Uint8:
+		value.Elem().SetUint(uint64(v.(string)[0]))
+	case reflect.Int:
+		value.Elem().SetInt(int64(v.(float64)))
+	case reflect.Int64:
+		value.Elem().SetInt(int64(v.(float64)))
+	case reflect.Float32:
+		value.Elem().SetFloat(float64(v.(float32)))
+	case reflect.Float64:
+		value.Elem().SetFloat(v.(float64))
+	case reflect.String:
+		value.Elem().SetString(v.(string))
+	case reflect.Slice:
+		v := v.([]any)
+		value = reflect.MakeSlice(tp, len(v), len(v))
+		for i, a := range v {
+			e := createByTypeValue(tp.Elem(), a)
+			value.Index(i).Set(reflect.ValueOf(e))
+		}
+		return value.Interface()
+	default:
+		panic("unhandled default case " + tp.String())
+	}
+
+	return value.Elem().Interface()
+}
+
 func createByType(tp reflect.Type, text []byte) (any, error) {
 	if tp == reflect.PointerTo(reflect.TypeFor[TreeNode]()) {
 		var ints []*int
@@ -59,103 +91,13 @@ func createByType(tp reflect.Type, text []byte) (any, error) {
 		return root, nil
 	}
 
-	switch tp.Kind() {
-	case reflect.String:
-		value := ""
-		err := json.Unmarshal(text, &value)
-		return value, err
-	case reflect.Uint8:
-		value := ""
-		err := json.Unmarshal(text, &value)
-		return value[0], err
-	case reflect.Int:
-		value := 0
-		err := json.Unmarshal(text, &value)
-		return value, err
-	case reflect.Int64:
-		value := int64(0)
-		err := json.Unmarshal(text, &value)
-		return value, err
-	case reflect.Float64:
-		value := 0.0
-		err := json.Unmarshal(text, &value)
-		return value, err
-	case reflect.Bool:
-		value := false
-		err := json.Unmarshal(text, &value)
-		return value, err
-	case reflect.Slice:
-		switch tp.Elem().Kind() {
-		case reflect.String:
-			value := make([]string, 0)
-			err := json.Unmarshal(text, &value)
-			return value, err
-		case reflect.Uint8:
-			value := make([]string, 0)
-			err := json.Unmarshal(text, &value)
-			res := make([]uint8, len(value))
-			for i, v := range value {
-				res[i] = v[0]
-			}
-			return res, err
-		case reflect.Int:
-			value := make([]int, 0)
-			err := json.Unmarshal(text, &value)
-			return value, err
-		case reflect.Int64:
-			value := make([]int64, 0)
-			err := json.Unmarshal(text, &value)
-			return value, err
-		case reflect.Float64:
-			value := make([]float64, 0)
-			err := json.Unmarshal(text, &value)
-			return value, err
-		case reflect.Bool:
-			value := make([]bool, 0)
-			err := json.Unmarshal(text, &value)
-			return value, err
-		case reflect.Slice:
-			switch tp.Elem().Elem().Kind() {
-			case reflect.String:
-				value := make([][]string, 0)
-				err := json.Unmarshal(text, &value)
-				return value, err
-			case reflect.Uint8:
-				value := make([][]string, 0)
-				err := json.Unmarshal(text, &value)
-				res := make([][]uint8, len(value))
-				for i, v := range value {
-					res[i] = make([]uint8, len(v))
-					for j, s := range v {
-						res[i][j] = s[0]
-					}
-				}
-				return res, err
-			case reflect.Int:
-				value := make([][]int, 0)
-				err := json.Unmarshal(text, &value)
-				return value, err
-			case reflect.Int64:
-				value := make([][]int64, 0)
-				err := json.Unmarshal(text, &value)
-				return value, err
-			case reflect.Float64:
-				value := make([][]float64, 0)
-				err := json.Unmarshal(text, &value)
-				return value, err
-			case reflect.Bool:
-				value := make([][]bool, 0)
-				err := json.Unmarshal(text, &value)
-				return value, err
-			default:
-				panic("unhandled default case " + tp.String())
-			}
-		default:
-			panic("unhandled default case " + tp.String())
-		}
-	default:
-		panic("unhandled default case " + tp.String())
+	var v any
+	err := json.Unmarshal(text, &v)
+	if err != nil {
+		return nil, err
 	}
+
+	return createByTypeValue(tp, v), nil
 }
 
 func TestCreateByType(t *testing.T) {
@@ -165,27 +107,27 @@ func TestCreateByType(t *testing.T) {
 		text   string
 		result any
 	}{
-		{"", reflect.TypeFor[string](), `"abc"`, "abc"},
-		{"", reflect.TypeFor[byte](), `"a"`, byte('a')},
-		{"", reflect.TypeFor[int](), `123`, 123},
-		{"", reflect.TypeFor[int64](), `123`, int64(123)},
-		{"", reflect.TypeFor[float64](), `123.4`, 123.4},
-		{"", reflect.TypeFor[bool](), `true`, true},
-		{"", reflect.TypeFor[bool](), `false`, false},
+		{"string", reflect.TypeFor[string](), `"abc"`, "abc"},
+		{"byte", reflect.TypeFor[byte](), `"a"`, byte('a')},
+		{"int", reflect.TypeFor[int](), `123`, 123},
+		{"int64", reflect.TypeFor[int64](), `123`, int64(123)},
+		{"float64", reflect.TypeFor[float64](), `123.4`, 123.4},
+		{"bool", reflect.TypeFor[bool](), `true`, true},
+		{"bool", reflect.TypeFor[bool](), `false`, false},
 
-		{"", reflect.TypeFor[[]string](), `["abc","bcd"]`, []string{"abc", "bcd"}},
-		{"", reflect.TypeFor[[]byte](), `["a","b"]`, []byte{'a', 'b'}},
-		{"", reflect.TypeFor[[]int](), `[123,234]`, []int{123, 234}},
-		{"", reflect.TypeFor[[]int64](), `[123,234]`, []int64{int64(123), int64(234)}},
-		{"", reflect.TypeFor[[]float64](), `[123.4,234.5]`, []float64{123.4, 234.5}},
-		{"", reflect.TypeFor[[]bool](), `[true,false]`, []bool{true, false}},
+		{"[]string", reflect.TypeFor[[]string](), `["abc","bcd"]`, []string{"abc", "bcd"}},
+		{"[]byte", reflect.TypeFor[[]byte](), `["a","b"]`, []byte{'a', 'b'}},
+		{"[]int", reflect.TypeFor[[]int](), `[123,234]`, []int{123, 234}},
+		{"[]int64", reflect.TypeFor[[]int64](), `[123,234]`, []int64{int64(123), int64(234)}},
+		{"[]float64", reflect.TypeFor[[]float64](), `[123.4,234.5]`, []float64{123.4, 234.5}},
+		{"[]bool", reflect.TypeFor[[]bool](), `[true,false]`, []bool{true, false}},
 
-		{"", reflect.TypeFor[[][]string](), `[["abc","bcd"]]`, [][]string{{"abc", "bcd"}}},
-		{"", reflect.TypeFor[[][]byte](), `[["a","b"]]`, [][]byte{{'a', 'b'}}},
-		{"", reflect.TypeFor[[][]int](), `[[123,234]]`, [][]int{{123, 234}}},
-		{"", reflect.TypeFor[[][]int64](), `[[123,234]]`, [][]int64{{int64(123), int64(234)}}},
-		{"", reflect.TypeFor[[][]float64](), `[[123.4,234.5]]`, [][]float64{{123.4, 234.5}}},
-		{"", reflect.TypeFor[[][]bool](), `[[true,false]]`, [][]bool{{true, false}}},
+		{"[][]string", reflect.TypeFor[[][]string](), `[["abc","bcd"]]`, [][]string{{"abc", "bcd"}}},
+		{"[][]byte", reflect.TypeFor[[][]byte](), `[["a","b"]]`, [][]byte{{'a', 'b'}}},
+		{"[][]int", reflect.TypeFor[[][]int](), `[[123,234]]`, [][]int{{123, 234}}},
+		{"[][]int64", reflect.TypeFor[[][]int64](), `[[123,234]]`, [][]int64{{int64(123), int64(234)}}},
+		{"[][]float64", reflect.TypeFor[[][]float64](), `[[123.4,234.5]]`, [][]float64{{123.4, 234.5}}},
+		{"[][]bool", reflect.TypeFor[[][]bool](), `[[true,false]]`, [][]bool{{true, false}}},
 	}
 
 	for _, test := range tests {

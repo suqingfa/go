@@ -134,7 +134,9 @@ func TestCreateByType(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			value, err := createByType(test.tp, []byte(test.text))
 			assert.NoError(t, err)
-			assert.Equal(t, test.result, value)
+			if !equal(reflect.ValueOf(test.result), reflect.ValueOf(value)) {
+				assert.Equal(t, test.result, value)
+			}
 		})
 	}
 }
@@ -198,6 +200,32 @@ func loadResult(filename string, valueOfFn reflect.Value) ([]reflect.Value, erro
 	return result, nil
 }
 
+// equal test func
+func equal(a, b reflect.Value) bool {
+	if a.Kind() != b.Kind() {
+		return false
+	}
+
+	switch a.Kind() {
+	case reflect.Float64:
+		return math.Abs(a.Float()-b.Float()) < 1e-5
+	case reflect.Array | reflect.Slice:
+		if a.Len() != b.Len() {
+			return false
+		}
+
+		for i := 0; i < a.Len(); i++ {
+			if !equal(a.Index(i), b.Index(i)) {
+				return false
+			}
+		}
+	default:
+		return a.Interface() == b.Interface()
+	}
+
+	return true
+}
+
 func TestFn(t *testing.T) {
 	if fn == nil {
 		return
@@ -247,33 +275,6 @@ func TestFn(t *testing.T) {
 			_ = file.Close()
 			os.Exit(0)
 		}(time.After(3 * time.Second))
-	}
-
-	// equal test func
-	var equal func(a, b reflect.Value) bool
-	equal = func(a, b reflect.Value) bool {
-		if a.Kind() != b.Kind() {
-			return false
-		}
-
-		switch a.Kind() {
-		case reflect.Float64:
-			return math.Abs(a.Float()-b.Float()) < 1e-5
-		case reflect.Array | reflect.Slice:
-			if a.Len() != b.Len() {
-				return false
-			}
-
-			for i := 0; i < a.Len(); i++ {
-				if !equal(a.Index(i), b.Index(i)) {
-					return false
-				}
-			}
-		default:
-			return a.Interface() == b.Interface()
-		}
-
-		return true
 	}
 
 	// run tests

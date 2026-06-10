@@ -89,15 +89,18 @@ func TestPrime(t *testing.T) {
 }
 
 func TestCNK(t *testing.T) {
-	cnk := initCNK(5)
-	assert.Equal(t, [][]int{
-		{1, 0, 0, 0, 0, 0},
-		{1, 1, 0, 0, 0, 0},
-		{1, 2, 1, 0, 0, 0},
-		{1, 3, 3, 1, 0, 0},
-		{1, 4, 6, 4, 1, 0},
-		{1, 5, 10, 10, 5, 1},
-	}, cnk)
+	n, m := 60, int(1e9+7)
+	cnk := NewCNK(n, m)
+	for i := range n + 1 {
+		x := cnk.cnk(n, i)
+
+		a := 1
+		for j := 0; j < i; j++ {
+			a = a * (n - j) / (j + 1)
+		}
+
+		assert.Equal(t, a%m, x)
+	}
 }
 
 func TestSubset(t *testing.T) {

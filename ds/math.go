@@ -137,22 +137,27 @@ func InitPrimes(n int) []int {
 	return res
 }
 
-// c(n, k) 组合数
-func initCNK(n int) [][]int {
-	c := make([][]int, n+1)
-	for i := 0; i <= n; i++ {
-		c[i] = make([]int, n+1)
-	}
+// CNK 组合数
+type CNK struct {
+	m   int
+	fac []int
+}
 
-	c[0][0] = 1
+func NewCNK(n, m int) *CNK {
+	fac := make([]int, n+1)
+	fac[0] = 1
 	for i := 1; i <= n; i++ {
-		c[i][0] = 1
-		for j := 1; j <= i; j++ {
-			c[i][j] = c[i-1][j] + c[i-1][j-1]
-		}
+		fac[i] = (fac[i-1] * i) % m
 	}
+	return &CNK{m: m, fac: fac}
+}
 
-	return c
+// c(n, k) = fac(n) / (fac(k)*fac(n-k))
+func (cnk *CNK) cnk(n, k int) int {
+	res := cnk.fac[n]
+	res = (res * ModInverse(cnk.fac[k], cnk.m)) % cnk.m
+	res = (res * ModInverse(cnk.fac[n-k], cnk.m)) % cnk.m
+	return res
 }
 
 func Subset(mask int) iter.Seq[int] {

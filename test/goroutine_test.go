@@ -15,7 +15,7 @@ func TestGoroutine(t *testing.T) {
 	c := make(chan int, 10)
 	defer close(c)
 
-	for i := 0; i < N; i++ {
+	for range int(N) {
 		go func(c chan int) {
 			time.Sleep(time.Millisecond)
 			c <- 1
@@ -23,7 +23,7 @@ func TestGoroutine(t *testing.T) {
 	}
 
 	value := 0
-	for i := 0; i < N; i++ {
+	for range int(N) {
 		value += <-c
 	}
 
@@ -37,7 +37,7 @@ func TestLock(t *testing.T) {
 	c := make(chan int)
 	defer close(c)
 
-	for i := 0; i < N; i++ {
+	for range int(N) {
 		go func(c chan int) {
 			mutex.Lock()
 			defer mutex.Unlock()
@@ -46,7 +46,7 @@ func TestLock(t *testing.T) {
 		}(c)
 	}
 
-	for i := 0; i < N; i++ {
+	for range int(N) {
 		<-c
 	}
 
@@ -59,14 +59,14 @@ func TestAtomic(t *testing.T) {
 	c := make(chan int)
 	defer close(c)
 
-	for i := 0; i < N; i++ {
+	for range int(N) {
 		go func(c chan int) {
 			value.Add(1)
 			c <- 0
 		}(c)
 	}
 
-	for i := 0; i < N; i++ {
+	for range int(N) {
 		<-c
 	}
 

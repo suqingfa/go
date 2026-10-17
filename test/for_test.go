@@ -7,9 +7,10 @@ import (
 
 func TestFor(t *testing.T) {
 	var seq iter.Seq[int] = func(yield func(int) bool) {
-		for i := range 10 {
-			yield(i)
-		}
+		yield(1)
+		yield(2)
+		yield(3)
+		yield(4)
 	}
 
 	for i := range seq {
@@ -17,10 +18,9 @@ func TestFor(t *testing.T) {
 	}
 
 	var seq2 iter.Seq2[int, string] = func(yield func(int, string) bool) {
-		arr := []string{"a", "b", "c"}
-		for i, s := range arr {
-			yield(i, s)
-		}
+		yield(1, "a")
+		yield(2, "b")
+		yield(3, "c")
 	}
 
 	for k, v := range seq2 {

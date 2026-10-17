@@ -4,7 +4,7 @@ import "testing"
 
 func BenchmarkOp(b *testing.B) {
 	res := 0
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		res++
 	}
 	b.Log(res)
@@ -12,7 +12,7 @@ func BenchmarkOp(b *testing.B) {
 
 func BenchmarkSwitchBS(b *testing.B) {
 	res := 0
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		switch i % 7 {
 		case 1:
 			res++
@@ -35,7 +35,7 @@ func BenchmarkSwitchBS(b *testing.B) {
 
 func BenchmarkSwitchJT(b *testing.B) {
 	res := 0
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		switch i % 7 {
 		case 1:
 			res++

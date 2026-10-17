@@ -29,14 +29,14 @@ func ModPower(base, n, mod int) int {
 	res = (res * res) % mod
 	if n%2 == 0 {
 		return res
-	} else {
-		return (res * base) % mod
 	}
+
+	return (res * base) % mod
 }
 
 func Sum[T int | int64 | byte | rune | float64](arr ...T) T {
 	res := T(0)
-	for i := 0; i < len(arr); i++ {
+	for i := range arr {
 		res += arr[i]
 	}
 	return res
@@ -73,7 +73,7 @@ func SymmetricNumberSeq(yield func(int) bool) {
 			itoa := strconv.Itoa(prefix)
 			bytes := []byte(itoa)
 			slices.Reverse(bytes)
-			for mid := 0; mid < 10; mid++ {
+			for mid := range 10 {
 				atoi, _ := strconv.Atoi(itoa + strconv.Itoa(mid) + string(bytes))
 				if !yield(atoi) {
 					return

@@ -22,7 +22,7 @@ func TestMonotonicStack(t *testing.T) {
 		{5, 4, 3, 0}, // [4]
 	}
 
-	for i := 0; i < len(source); i++ {
+	for i := range source {
 		push := stack.Push(i)
 		assert.Equal(t, except[i], push)
 	}

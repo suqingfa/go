@@ -46,7 +46,7 @@ func TestQueue(t *testing.T) {
 	q.Enqueue(3)
 	assert.False(t, q.Empty())
 
-	for i := 0; i < 4; i++ {
+	for i := range 4 {
 		value, ok := q.Dequeue()
 		assert.True(t, ok)
 		assert.Equal(t, i, value)
@@ -58,7 +58,7 @@ func TestQueue(t *testing.T) {
 	pq.Enqueue(1)
 	pq.Enqueue(0)
 
-	for i := 0; i < 4; i++ {
+	for i := range 4 {
 		value, ok := pq.Dequeue()
 		assert.True(t, ok)
 		assert.Equal(t, i, value)

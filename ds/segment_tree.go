@@ -95,12 +95,11 @@ func (st *SegmentTree) Range(left int, right int) int {
 			return st.zero
 		} else if nodeLeft >= left && nodeRight <= right {
 			return st.tree[node]
-		} else {
-			nodeMid := (nodeLeft + nodeRight) / 2
-			l := dfs(2*node, nodeLeft, nodeMid)
-			r := dfs(2*node+1, nodeMid+1, nodeRight)
-			return st.merge(l, r)
 		}
+		nodeMid := (nodeLeft + nodeRight) / 2
+		l := dfs(2*node, nodeLeft, nodeMid)
+		r := dfs(2*node+1, nodeMid+1, nodeRight)
+		return st.merge(l, r)
 	}
 	return dfs(1, 0, len(st.tree)/4-1)
 }

@@ -95,7 +95,7 @@ func TestCNK(t *testing.T) {
 		x := cnk.cnk(n, i)
 
 		a := 1
-		for j := 0; j < i; j++ {
+		for j := range i {
 			a = a * (n - j) / (j + 1)
 		}
 

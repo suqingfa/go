@@ -14,7 +14,7 @@ func BenchmarkIfSorted(b *testing.B) {
 	b.ResetTimer()
 
 	res := 0
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		for _, j := range arr {
 			if j%10 < 1 {
 				res++
@@ -38,7 +38,7 @@ func BenchmarkIfNotSorted(b *testing.B) {
 	b.ResetTimer()
 
 	res := 0
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		for _, j := range arr {
 			if j%10 >= 1 {
 				res--

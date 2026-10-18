@@ -92,7 +92,7 @@ func TestCNK(t *testing.T) {
 	n, m := 60, int(1e9+7)
 	cnk := NewCNK(n, m)
 	for i := range n + 1 {
-		x := cnk.cnk(n, i)
+		x := cnk.Cnk(n, i)
 
 		a := 1
 		for j := range i {

@@ -141,6 +141,7 @@ func InitPrimes(n int) []int {
 type CNK struct {
 	m   int
 	fac []int
+	inv []int
 }
 
 func NewCNK(n, m int) *CNK {
@@ -149,14 +150,21 @@ func NewCNK(n, m int) *CNK {
 	for i := 1; i <= n; i++ {
 		fac[i] = (fac[i-1] * i) % m
 	}
-	return &CNK{m: m, fac: fac}
+
+	inv := make([]int, n+1)
+	for i := range inv {
+		inv[i] = ModInverse(fac[i], m)
+	}
+
+	return &CNK{m: m, fac: fac, inv: inv}
 }
 
+// Cnk
 // c(n, k) = fac(n) / (fac(k)*fac(n-k))
-func (cnk *CNK) cnk(n, k int) int {
+func (cnk *CNK) Cnk(n, k int) int {
 	res := cnk.fac[n]
-	res = (res * ModInverse(cnk.fac[k], cnk.m)) % cnk.m
-	res = (res * ModInverse(cnk.fac[n-k], cnk.m)) % cnk.m
+	res = (res * cnk.inv[k]) % cnk.m
+	res = (res * cnk.inv[n-k]) % cnk.m
 	return res
 }
 

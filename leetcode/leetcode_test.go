@@ -158,7 +158,7 @@ func loadData(filename string, valueOfFn reflect.Value) ([][]reflect.Value, erro
 		arg := make([]any, len(argsType))
 
 		for i := range arg {
-			if !scanner.Scan() {
+			if !scanner.Scan() || scanner.Err() != nil {
 				return args, nil
 			}
 
@@ -189,7 +189,7 @@ func loadResult(filename string, valueOfFn reflect.Value) ([]reflect.Value, erro
 	scanner := bufio.NewScanner(data)
 	buffer := make([]byte, 1024*1024*100)
 	scanner.Buffer(buffer, len(buffer))
-	for scanner.Scan() {
+	for scanner.Scan() && scanner.Err() == nil {
 		value, err := createByType(resultType, scanner.Bytes())
 		if err != nil {
 			return nil, err
@@ -246,7 +246,7 @@ func TestFn(t *testing.T) {
 	debug := false
 	statusFile, _ := os.Open("/proc/self/status")
 	scanner := bufio.NewScanner(statusFile)
-	for scanner.Scan() {
+	for scanner.Scan() && scanner.Err() == nil {
 		text := scanner.Text()
 		if !strings.HasPrefix(text, "TracerPid") {
 			continue

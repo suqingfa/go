@@ -4,7 +4,7 @@ import "testing"
 
 func BenchmarkOp(b *testing.B) {
 	res := 0
-	for range b.N {
+	for b.Loop() {
 		res++
 	}
 	b.Log(res)

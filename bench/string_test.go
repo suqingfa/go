@@ -7,7 +7,7 @@ import (
 
 func BenchmarkStringAdd(b *testing.B) {
 	s := ""
-	for range b.N {
+	for b.Loop() {
 		s += "abc"
 	}
 	b.Log(len(s))
@@ -15,7 +15,7 @@ func BenchmarkStringAdd(b *testing.B) {
 
 func BenchmarkStringBuilder(b *testing.B) {
 	builder := strings.Builder{}
-	for range b.N {
+	for b.Loop() {
 		builder.WriteString("abc")
 	}
 	b.Log(builder.Len())

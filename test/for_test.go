@@ -7,9 +7,15 @@ import (
 
 func TestFor(t *testing.T) {
 	var seq iter.Seq[int] = func(yield func(int) bool) {
-		yield(1)
-		yield(2)
-		yield(3)
+		if !yield(1) {
+			return
+		}
+		if !yield(2) {
+			return
+		}
+		if !yield(3) {
+			return
+		}
 		yield(4)
 	}
 
@@ -18,8 +24,12 @@ func TestFor(t *testing.T) {
 	}
 
 	var seq2 iter.Seq2[int, string] = func(yield func(int, string) bool) {
-		yield(1, "a")
-		yield(2, "b")
+		if !yield(1, "a") {
+			return
+		}
+		if !yield(2, "b") {
+			return
+		}
 		yield(3, "c")
 	}
 

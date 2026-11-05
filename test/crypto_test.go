@@ -6,7 +6,6 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"crypto/x509"
-	"encoding/base64"
 	"encoding/hex"
 	"encoding/pem"
 	"fmt"
@@ -53,13 +52,33 @@ func TestPublicKey(t *testing.T) {
 	publicKey, privateKey, err := ed25519.GenerateKey(rand.Reader)
 	assert.Nil(t, err)
 
-	t.Log("public key", base64.StdEncoding.EncodeToString(publicKey))
-	t.Log("private key", base64.StdEncoding.EncodeToString(privateKey))
+	// private key pem
+	privateKeyBytes, err := x509.MarshalPKCS8PrivateKey(privateKey)
+	assert.NoError(t, err)
 
+	privateKeyPem := &pem.Block{
+		Type:  "PRIVATE KEY",
+		Bytes: privateKeyBytes,
+	}
+
+	pem.Encode(t.Output(), privateKeyPem)
+
+	// public key pem
+	publickeyBytes, err := x509.MarshalPKIXPublicKey(publicKey)
+	assert.NoError(t, err)
+
+	publicKeyPem := &pem.Block{
+		Type:  "PUBLIC KEY",
+		Bytes: publickeyBytes,
+	}
+
+	pem.Encode(t.Output(), publicKeyPem)
+
+	// sign
 	message := []byte("hello")
 	sign := ed25519.Sign(privateKey, message)
-	t.Log("sign", hex.EncodeToString(sign))
 
+	// verify
 	verify := ed25519.Verify(publicKey, message, sign)
 	assert.True(t, verify)
 }
